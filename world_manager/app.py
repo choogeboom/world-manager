@@ -26,6 +26,7 @@ def create_app(settings_override: Optional[dict]=None) -> Flask:
 
     if settings_override:
         app.config.update(settings_override)
+    configure_logging(app)
 
     initialize_extensions(app)
     register_blueprints(app)
@@ -51,3 +52,7 @@ def register_blueprints(app: Flask) -> None:
     """
     for blueprint in ACTIVE_BLUEPRINTS:
         app.register_blueprint(blueprint)
+
+
+def configure_logging(app: Flask) -> None:
+    pass
