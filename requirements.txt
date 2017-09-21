@@ -1,6 +1,21 @@
+# Web App
+flask
+
 # Data
 sqlalchemy
-flask_sqlalchemy
+alembic
+
+# Dates
+pytz
 
 # Command Line
 click
+
+# Testing and static analysis
+pytest
+pytest-cov
+
+# Extensions
+flask-sqlalchemy
+flask-debugtoolbar
+flask-jsontools
