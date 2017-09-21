@@ -1,2 +1,6 @@
+# Data
 sqlalchemy
 flask_sqlalchemy
+
+# Command Line
+click
