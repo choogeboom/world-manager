@@ -4,9 +4,11 @@ from flask import Flask
 
 from world_manager.extensions import db
 
+from world_manager.blueprints.page.views import page
+
 
 ACTIVE_EXTENSIONS = [db]
-ACTIVE_BLUEPRINTS = []
+ACTIVE_BLUEPRINTS = [page]
 
 
 def create_app(settings_override: Optional[dict]=None) -> Flask:
