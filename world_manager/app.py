@@ -29,6 +29,7 @@ def create_app(settings_override: Optional[dict]=None) -> Flask:
     configure_logging(app)
 
     initialize_extensions(app)
+    db.app = app
     register_blueprints(app)
 
     return app
