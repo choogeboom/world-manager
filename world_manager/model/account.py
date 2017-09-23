@@ -3,9 +3,9 @@ from typing import Optional
 
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
-from utils.sql import AwareDateTime
+from utils.sql import AwareDateTime, tz_aware_now, ResourceMixin
 
 from world_manager.extensions import db
 
@@ -15,7 +15,7 @@ class UserRole(enum.Enum):
     member = 2
 
 
-class User(db.Model):
+class User(ResourceMixin, db.Model):
 
     id = db.Column(db.BigInteger,
                    primary_key=True)
@@ -41,11 +41,11 @@ class User(db.Model):
     password = db.Column(db.String(128), nullable=False, server_default='')
 
     # Activity Tracking
-    sign_in_count = db.Column(db.Integer, nullable=False, default=0)
-    current_sign_in_on = db.Column(AwareDateTime())
-    current_sign_in_ip_address = db.Column(db.String(45))
-    last_sign_in_on = db.Column(AwareDateTime())
-    last_sign_in_ip_address = db.Column(db.String(45))
+    login_count = db.Column(db.Integer, nullable=False, default=0)
+    current_login_time = db.Column(AwareDateTime())
+    current_login_ip_address = db.Column(db.String(45))
+    last_login_time = db.Column(AwareDateTime())
+    last_login_ip_address = db.Column(db.String(45))
 
     def __init__(self, **kwargs):
         super.__init__(**kwargs)
@@ -98,6 +98,29 @@ class User(db.Model):
             return User.find_by_identity(decoded_payload.get('user_email'))
         except Exception:
             return None
+
+    def authenticate(self, password: str='') -> bool:
+        """
+        Ensure a user is authenticated, and optionally check their password.
+
+        :param password: Optionally verify this as their password
+        """
+        if password:
+            return check_password_hash(self.password, password)
+
+        return True
+
+    def register_login(self, ip_address):
+        self.sign_in_count += 1
+
+        self.last_login_ip_address = self.current_login_ip_address
+        self.last_login_time = self.current_login_time
+
+        self.current_login_ip_address = ip_address
+        self.current_login_time = tz_aware_now()
+
+        return self.save()
+
 
 
 
