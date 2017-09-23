@@ -1,6 +1,8 @@
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_jsontools import JsonSerializableBase
 from flask_sqlalchemy import SQLAlchemy, Model
+from flask_jsglue import JSGlue
+
 from sqlalchemy import inspect
 from sqlalchemy.ext.declarative import declared_attr, DeclarativeMeta
 
@@ -46,4 +48,5 @@ class ModelBase(Model, JsonSerializableBase):
 
 db = SQLAlchemy(model_class=ModelBase)
 debug_toolbar = DebugToolbarExtension()
+jsglue = JSGlue()
 

@@ -1,65 +1,80 @@
+{% import 'macros/flash.html' as flash with context %}
+{% import 'macros/style.html' as style %}
+{% import 'macros/script.html' as script %}
+{% set application_name = application_name | default('World Manager') %}
+{% set title = title | default('') %}
+{% set main_styles = ['vendor/bootstrap.min.css',
+                      'vendor/font-awesome.min.css',
+                      'main.css'] %}
+{% set additional_styles = additional_styles | default([]) %}
+{% set main_scripts = ['vendor/jquery-2.2.4.min.js',
+                       'vendor/bootstrap.min.js',
+                       'main.js'] %}
+{% set additional_scripts = additional_scripts | default([]) %}
+
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description"
-          content="{% block meta_description %}{% endblock %}">
+<html lang="en">
 
-    <title>{% block title %}{% endblock %}</title>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='styles/vendor/bootstrap.min.css') }}">
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='styles/main.css') }}">
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='styles/vendor/font-awesome.min.css') }}">
-    <script src="https://code.jquery.com/jquery-1.12.2.min.js"
-            integrity="sha256-lZFHibXzMHo3GGeehn1hudTAP3Sc0uKXBXAzHX1sjtk="
-            crossorigin="anonymous"></script>
-  </head>
-  <body>
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed"
-                  data-toggle="collapse" data-target="#navbar"
-                  aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a href="{{ url_for('page.home') }}">
-            <img src="{{ url_for('static', filename='images/world-manager.jpg') }}"
-                 class="img-responsive"
-                 width="229" height="50" title="World Manager" alt="World Manager"/>
-          </a>
-        </div>
+  <meta name="description"
+        content="{% block meta_description %}{% endblock %}">
+
+  <!-- icon for site -->
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+
+  <title>{{ title }}{% if title %} - {% endif %}{{ application_name }}</title>
+
+  {% for s in main_styles %}
+    {{ style.link(s) }}
+  {% endfor %}
+
+  {% for s in additional_styles %}
+    {{ style.link(s) }}
+  {% endfor %}
+  <!--suppress JSUnusedLocalSymbols, ES6ConvertVarToLetConst -->
+  <script>
+      var Flask = {url_for: function(){}};
+      {% block head_script %}
+      {% endblock %}
+  </script>
+
+  {{ JSGlue.include() }}
+
+</head>
+
+<body>
+
+{% block page_header %}{% endblock %}
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12" id="page-content-wrapper">
+      {{ flash.render() }}
+      <div id=main-content" class="md-margin-top">{% block content_header %}{% endblock %}</div>
+        {% block content %}{% endblock %}
       </div>
-    </nav>
+  </div>
+</div>
 
-    <main class="container">
-      <div class="md-margin-top">{% block heading %}{% endblock %}</div>
-      {% block body %}{% endblock %}
-    </main>
 
-    <footer class="footer text-center">
-      <div class="container">
-        <ul class="list-inline">
-          <li class="text-muted">World Manager &copy; 2016</li>
-          <li><a href="{{ url_for('page.privacy') }}">Privacy Policy</a></li>
-          <li><a href="{{ url_for('page.terms') }}">Terms of Service</a></li>
-        </ul>
-      </div>
-    </footer>
 
-    <script
-      src="{{ url_for('static', filename='scripts/vendor/bootstrap.min.js') }}">
-    </script>
-  </body>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+{% for s in main_scripts %}
+  {{ script.src(s) }}
+{% endfor %}
+
+{% for s in additional_scripts %}
+  {{ script.src(s) }}
+{% endfor %}
+
+{% block script %}{% endblock %}
+</body>
 </html>

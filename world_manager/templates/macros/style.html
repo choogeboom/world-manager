@@ -1,0 +1,6 @@
+{# Simplify adding styles to a page #}
+{# the file_name should be relative to the static/styles directory #}
+{%- macro link(file_name) -%}
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='/'.join(['styles', file_name])) }}">
+{%- endmacro -%}

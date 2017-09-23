@@ -20,3 +20,4 @@ pytest-cov
 flask-sqlalchemy
 flask-debugtoolbar
 flask-jsontools
+flask-jsglue

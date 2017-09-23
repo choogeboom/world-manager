@@ -1,0 +1,6 @@
+{# Simplify adding scripts to a page #}
+{%- macro src(file_name) -%}
+<script {% if file_name -%}
+        src="{{ url_for('static', filename=['scripts', file_name]|join('/')) }}"
+        {%- endif -%}></script>
+{%- endmacro -%}
