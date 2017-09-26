@@ -4,7 +4,7 @@ from sqlalchemy_utils import database_exists, create_database
 
 from world_manager.app import create_app
 from world_manager.extensions import db
-from world_manager.model.account import User
+
 
 # Create an app context for the database connection.
 app = create_app()

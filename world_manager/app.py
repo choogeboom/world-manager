@@ -32,6 +32,8 @@ def create_app(settings_override: Optional[dict]=None) -> Flask:
     db.app = app
     register_blueprints(app)
 
+    load_models()
+
     return app
 
 
@@ -57,3 +59,10 @@ def register_blueprints(app: Flask) -> None:
 
 def configure_logging(app: Flask) -> None:
     pass
+
+
+# noinspection PyUnresolvedReferences
+def load_models():
+    # Ensure that all database models get loaded properly
+    import world_manager.model.account
+    import world_manager.model.stat
