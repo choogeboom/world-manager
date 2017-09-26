@@ -51,14 +51,10 @@ class ResourceMixin:
     db_created_on = db.Column(
         AwareDateTime(),
         default=tz_aware_now,
-        display_name='Created On',
-        visible=False
     )
     db_updated_on = db.Column(
         AwareDateTime(),
         default=tz_aware_now,
-        display_name='Updated On',
-        visible=False
     )
 
     def __setattr__(self, key, value):
