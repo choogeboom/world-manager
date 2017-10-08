@@ -6,6 +6,9 @@ sqlalchemy
 sqlalchemy-utils
 alembic
 
+# Tasks
+celery[redis]
+
 # Dates
 pytz
 
