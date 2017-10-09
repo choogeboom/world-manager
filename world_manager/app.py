@@ -6,11 +6,12 @@ from flask import Flask
 from world_manager.extensions import db, debug_toolbar, jsglue, mail, csrf
 
 from world_manager.blueprints.page.views import page
+from world_manager.blueprints.contact.views import contact
 
 
 ACTIVE_EXTENSIONS = [db, debug_toolbar, jsglue, mail, csrf]
-ACTIVE_BLUEPRINTS = [page]
-CELERY_TASK_LIST = []
+ACTIVE_BLUEPRINTS = [page, contact]
+CELERY_TASK_LIST = ['world_manager.blueprints.contact.tasks']
 
 
 def create_celery_app(app: Optional[Flask]=None) -> Celery:
@@ -28,7 +29,7 @@ def create_celery_app(app: Optional[Flask]=None) -> Celery:
 
         def __call__(self, *args, **kwargs):
             with app.app_context():
-                return super().__call__(self, *args, **kwargs)
+                return super().__call__(*args, **kwargs)
 
         def run(self, *args, **kwargs):
             """The body of the task executed by workers."""
