@@ -1,4 +1,5 @@
 from flask_debugtoolbar import DebugToolbarExtension
+from flask_login.login_manager import LoginManager
 from flask_mail import Mail
 from flask_jsontools import JsonSerializableBase
 from flask_sqlalchemy import SQLAlchemy, Model
@@ -53,3 +54,4 @@ debug_toolbar = DebugToolbarExtension()
 jsglue = JSGlue()
 mail = Mail()
 csrf = CSRFProtect()
+login_manager = LoginManager()

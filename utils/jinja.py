@@ -1,9 +1,9 @@
 from utils.sql import tz_aware_now
 
 
-def current_year():
+def current_year() -> int:
     """
-    Returns the current year
-    :return:
+    Return the current year
+    :return: the current year
     """
     return tz_aware_now().year

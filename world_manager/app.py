@@ -3,16 +3,22 @@ from typing import Optional
 from celery import Celery, Task
 from flask import Flask
 
-from world_manager.extensions import db, debug_toolbar, jsglue, mail, csrf
+from world_manager.extensions import (db,
+                                      debug_toolbar,
+                                      jsglue,
+                                      mail,
+                                      csrf,
+                                      login_manager)
 
 from world_manager.blueprints.page.views import page
 from world_manager.blueprints.contact.views import contact
+from world_manager.blueprints.user.views import user
 
 from utils.jinja import current_year
 
 
-ACTIVE_EXTENSIONS = [db, debug_toolbar, jsglue, mail, csrf]
-ACTIVE_BLUEPRINTS = [page, contact]
+ACTIVE_EXTENSIONS = [db, debug_toolbar, jsglue, mail, csrf, login_manager]
+ACTIVE_BLUEPRINTS = [page, contact, user]
 CELERY_TASK_LIST = ['world_manager.blueprints.contact.tasks']
 
 

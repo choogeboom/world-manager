@@ -25,6 +25,7 @@ flask-debugtoolbar
 flask-jsontools
 flask-jsglue
 flask_mail
+flask-login
 
 # Forms
 wtforms
