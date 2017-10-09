@@ -8,6 +8,8 @@ from world_manager.extensions import db, debug_toolbar, jsglue, mail, csrf
 from world_manager.blueprints.page.views import page
 from world_manager.blueprints.contact.views import contact
 
+from utils.jinja import current_year
+
 
 ACTIVE_EXTENSIONS = [db, debug_toolbar, jsglue, mail, csrf]
 ACTIVE_BLUEPRINTS = [page, contact]
@@ -65,6 +67,7 @@ def create_app(settings_override: Optional[dict]=None) -> Flask:
     initialize_extensions(app)
     db.app = app
     register_blueprints(app)
+    initialize_jinja2(app)
 
     load_models()
 
@@ -100,3 +103,7 @@ def load_models():
     # Ensure that all database models get loaded properly
     import world_manager.model.account
     import world_manager.model.stat
+
+
+def initialize_jinja2(app: Flask) -> None:
+    app.jinja_env.globals.update(current_year=current_year)
