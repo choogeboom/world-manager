@@ -2,6 +2,9 @@
 SERVER_NAME = 'actualservername'
 SECRET_KEY = 'generateastrong128chartoken'
 
+MAIL_USERNAME = 'you@gmail.com'
+MAIL_PASSWORD = 'areallystrongpassword'
+
 CELERY_USER_NAME = 'actualusername'
 CELERY_VHOST = 'actualvhost'
 CELERY_PASSWORD = 'amuchmoresecurepassword'
