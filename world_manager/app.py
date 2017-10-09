@@ -3,12 +3,12 @@ from typing import Optional
 from celery import Celery, Task
 from flask import Flask
 
-from world_manager.extensions import db, debug_toolbar, jsglue
+from world_manager.extensions import db, debug_toolbar, jsglue, mail, csrf
 
 from world_manager.blueprints.page.views import page
 
 
-ACTIVE_EXTENSIONS = [db, debug_toolbar, jsglue]
+ACTIVE_EXTENSIONS = [db, debug_toolbar, jsglue, mail, csrf]
 ACTIVE_BLUEPRINTS = [page]
 CELERY_TASK_LIST = []
 

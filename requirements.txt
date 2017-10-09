@@ -24,3 +24,9 @@ flask-sqlalchemy
 flask-debugtoolbar
 flask-jsontools
 flask-jsglue
+flask_mail
+
+# Forms
+wtforms
+flask_wtf
+WTForms-Components
