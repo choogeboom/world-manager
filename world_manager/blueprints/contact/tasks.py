@@ -20,4 +20,4 @@ def deliver_contact_email(email, message):
                           recipients=[celery.conf.get('MAIL_USERNAME')],
                           reply_to=email,
                           template='contact/mail/index',
-                          ctx=context)
+                          context=context)
