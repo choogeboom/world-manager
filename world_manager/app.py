@@ -13,12 +13,13 @@ from world_manager.extensions import (db,
 from world_manager.blueprints.page.views import page
 from world_manager.blueprints.contact.views import contact
 from world_manager.blueprints.user.views import user
+from world_manager.blueprints.char.views import char
 
-from utils.jinja import current_year
-
+from utils.jinja import current_year, ability_modifier, saving_throw_modifier, \
+    skill_modifier
 
 ACTIVE_EXTENSIONS = [db, debug_toolbar, jsglue, mail, csrf, login_manager]
-ACTIVE_BLUEPRINTS = [page, contact, user]
+ACTIVE_BLUEPRINTS = [page, contact, user, char]
 CELERY_TASK_LIST = ['world_manager.blueprints.contact.tasks']
 
 
@@ -112,4 +113,7 @@ def load_models():
 
 
 def initialize_jinja2(app: Flask) -> None:
-    app.jinja_env.globals.update(current_year=current_year)
+    app.jinja_env.globals.update(current_year=current_year,
+                                 ability_modifier=ability_modifier,
+                                 saving_throw_modifier=saving_throw_modifier,
+                                 skill_modifier=skill_modifier)

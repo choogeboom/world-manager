@@ -1,0 +1,599 @@
+{% extends 'layouts/base.html' %}
+
+{% set title='Flinty Slatemuncher' %}
+{% set additional_styles = ['character_sheet.css'] %}
+
+{% set character_name = 'Flinty Slatemuncher' %}
+{% set character_classes = ['Monk 3'] %}
+{% set character_background = 'Hermit' %}
+{% set player_name = 'Chris' %}
+{% set character_race = 'Hill Dwarf' %}
+{% set alignment = 'Chaotic Neutral' %}
+{% set current_xp = 2150 %}
+{% set next_level_xp = 2700 %}
+{% set proficiency_bonus = 2 %}
+{% set abilities = {
+  'strength': {
+    'score': {
+      'base': 13,
+      'racial': 0,
+      'other': []},
+    'saving_throws': {
+      'proficient': 1,
+      'other': [1]},
+    'skills': {
+      'athletics': {
+        'proficient': 0,
+        'other': []
+      }
+    }
+  },
+  'dexterity': {
+    'score': {
+      'base': 17,
+      'racial': 0,
+      'other': [],
+    },
+    'saving_throws': {
+      'proficient': 1,
+      'other': [1]
+    },
+    'skills': {
+      'acrobatics': {
+        'proficient': 1,
+        'other': []
+      },
+      'sleight_of_hand': {
+        'proficient': 0,
+        'other': []
+      },
+      'stealth': {
+        'proficient': 1,
+        'other': []
+      },
+    }
+  },
+  'constitution': {
+    'score': {
+      'base': 15,
+      'racial': 2,
+      'other': []
+    },
+    'saving_thorws': {
+      'proficient': 0,
+      'other': [1]
+    },
+    'skills': {}
+  },
+  'intelligence': {
+    'score': {
+      'base': 12,
+      'racial': 0,
+      'other': []
+    },
+    'saving_throws': {
+      'proficient': 0,
+      'other': [1]
+    },
+    'skills': {
+      'arcana': {
+        'proficient': 0,
+        'other': []
+      },
+      'history': {
+        'proficient': 0,
+        'other': []
+      },
+      'investigation': {
+        'proficient': 0,
+        'other': []
+      },
+      'nature': {
+        'proficient': 0,
+        'other': []
+      },
+      'religion': {
+        'proficient': 1,
+        'other': []
+      }
+    }
+  },
+  'wisdom': {
+    'score': {
+      'base': 15,
+      'racial': 1,
+      'other': []
+    },
+    'saving_throws': {
+      'proficient': 0,
+      'other': [1]
+    },
+    'skills': {
+      'animal_handling': {
+        'proficient': 0,
+        'other': []
+      },
+      'insight': {
+        'proficient': 0,
+        'other': []
+      },
+      'medicine': {
+        'proficient': 1,
+        'other': []
+      },
+      'perception': {
+        'proficient': 0,
+        'other': []
+      },
+      'survival': {
+        'proficient': 0,
+        'other': []
+      }
+    }
+  },
+  'charisma': {
+    'score': {
+      'base': 12,
+      'racial': 0,
+      'other': []
+    },
+    'saving_throws': {
+      'proficient': 0,
+      'other': [1]
+    },
+    'skills': {
+      'deception': {
+        'proficient': 0,
+        'other': []
+      },
+      'intimidation': {
+        'proficient': 0,
+        'other': []
+      },
+      'performance': {
+        'proficient': 0,
+        'other': []
+      }
+    }
+  }
+}
+ %}
+
+
+{% block content %}
+  <div class="character-sheet container-fluid">
+    <div class="row">
+      <div class="col-4">
+        <header>
+          <h1 id="character-name">{{ character_name }}</h1>
+          <p class="subtitle">CHARACTER NAME</p>
+        </header>
+      </div>
+      <div id="character-header" class="col">
+        <div class="row">
+          <div class="col">
+            <header>
+              <h4 id="character-classes">{{ character_classes | join(', ') }}</h4>
+              <p class="subtitle">CLASS &amp; LEVEL</p>
+            </header>
+          </div>
+          <div class="col">
+            <header>
+              <h4 id="character-background">{{ character_background }}</h4>
+              <p class="subtitle">BACKGROUND</p>
+            </header>
+          </div>
+          <div class="col">
+            <header>
+              <h4 id="player-name">{{ player_name }}</h4>
+              <p class="subtitle">PLAYER NAME</p>
+            </header>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <header>
+              <h4 id="character-race">{{ character_race }}</h4>
+              <p class="subtitle">RACE</p>
+            </header>
+          </div>
+          <div class="col">
+            <header>
+              <h4 id="alignment">{{ alignment }}</h4>
+              <p class="subtitle">ALIGNMENT</p>
+            </header>
+          </div>
+          <div class="col">
+            <header>
+              <h4 id="xp">
+                {{ current_xp }}
+                <span class="out-of">/{{ next_level_xp }}</span>
+              </h4>
+              <p class="subtitle">EXPERIENCE POINTS</p>
+            </header>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 col-4-md stat-group">
+        <div class="row standalone-stat">
+          <div class="col-3 modifier">
+            <p class="proficiency-bonus">{{ '%+d'|format(proficiency_bonus) }}</p>
+          </div>
+          <div class="col">
+            <p class="label">PROFICIENCY BONUS</p>
+          </div>
+        </div>
+        <div class="row standalone-stat">
+          <div class="col-3 modifier">
+            <p class="inspiration"></p>
+          </div>
+          <div class="col">
+            <p class="label">INSPIRATION</p>
+          </div>
+        </div>
+        <div class="row standalone-stat">
+          <div class="col-3 modifier">
+            <p><span id="passive-perception">
+              {{ abilities['wisdom']|skill_modifier('perception',
+                                                      proficiency_bonus) }}
+            </span>
+          </div>
+          <div class="col">
+            <p class="label">PASSIVE WISDOM (PERCEPTION)</p>
+          </div>
+        </div>
+        <div class="row strength-ability">
+          <div class="col-7 col-sm-6 col-md-5 col-lg-4 col-xl-3 ability">
+            <p class="ability-modifier">+2</p>
+            <p class="ability-score">13</p>
+            <p class="ability-name">STRENGTH</p>
+          </div>
+          <div class="col skills-and-saves">
+            <ul>
+              <li class="proficient saving-throw">
+                <span class="modifier">+5</span>
+                <span class="label">SAVING THROWS</span>
+              </li>
+              <li class="skill">
+                <span class="modifier">+2</span>
+                <span class="label">ATHLETICS</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="row dexterity-ability">
+          <div class="col-7 col-sm-6 col-md-5 col-lg-4 col-xl-3 ability">
+            <p class="ability-modifier">+3</p>
+            <p class="ability-score">17</p>
+            <p class="ability-name">DEXTERITY</p>
+          </div>
+          <div class="col skills-and-saves">
+            <ul>
+              <li class="proficient saving-throw">
+                <span class="modifier">+6</span>
+                <span class="label">SAVING THROWS</span>
+              </li>
+              <li class="proficient skill">
+                <span class="modifier">+5</span>
+                <span class="label">ACROBATICS</span>
+              </li>
+              <li class="skill">
+                <span class="modifier">+3</span>
+                <span class="label">SLEIGHT OF HAND</span>
+              </li>
+              <li class="proficient skill">
+                <span class="modifier">+5</span>
+                <span class="label">STEALTH</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="row constitution-ability">
+          <div class="col-7 col-sm-6 col-md-5 col-lg-4 col-xl-3 ability">
+            <p class="ability-modifier">+3</p>
+            <p class="ability-score">17</p>
+            <p class="ability-name">CONSTITUTION</p>
+          </div>
+          <div class="col skills-and-saves">
+            <ul>
+              <li class="saving-throw">
+                <span class="modifier">+4</span>
+                <span class="label">SAVING THROWS</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="row intelligence-ability">
+          <div class="col-7 col-sm-6 col-md-5 col-lg-4 col-xl-3 ability">
+            <p class="ability-modifier">+1</p>
+            <p class="ability-score">12</p>
+            <p class="ability-name">INTELLIGENCE</p>
+          </div>
+          <div class="col skills-and-saves">
+            <ul>
+              <li class="saving-throw">
+                <span class="modifier">+2</span>
+                <span class="label">SAVING THROWS</span>
+              </li>
+              <li class="skill">
+                <span class="modifier">+1</span>
+                <span class="label">ARCANA</span>
+              </li>
+              <li class="skill">
+                <span class="modifier">+1</span>
+                <span class="label">HISTORY</span>
+              </li>
+              <li class="skill">
+                <span class="modifier">+1</span>
+                <span class="label">INVESTIGATION</span>
+              </li>
+              <li class="skill">
+                <span class="modifier">+1</span>
+                <span class="label">NATURE</span>
+              </li>
+              <li class="proficient skill">
+                <span class="modifier">+1</span>
+                <span class="label">RELIGION</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="row wisdom-ability">
+          <div class="col-7 col-sm-6 col-md-5 col-lg-4 col-xl-3 ability">
+            <p class="ability-modifier">+3</p>
+            <p class="ability-score">16</p>
+            <p class="ability-name">WISDOM</p>
+          </div>
+          <div class="col skills-and-saves">
+            <ul>
+              <li class="saving-throw">
+                <span class="modifier">+4</span>
+                <span class="label">SAVING THROWS</span>
+              </li>
+              <li class="skill">
+                <span class="modifier">+3</span>
+                <span class="label">ANIMAL HANDLING</span>
+              </li>
+              <li class="skill">
+                <span class="modifier">+3</span>
+                <span class="label">INSIGHT</span>
+              </li>
+              <li class="proficient skill">
+                <span class="modifier">+5</span>
+                <span class="label">MEDICINE</span>
+              </li>
+              <li class="skill">
+                <span class="modifier">+3</span>
+                <span class="label">PERCEPTION</span>
+              </li>
+              <li class="skill">
+                <span class="modifier">+3</span>
+                <span class="label">SURVIVAL</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="row charisma-ability">
+          <div class="col-7 col-sm-6 col-md-5 col-lg-4 col-xl-3 ability">
+            <p class="ability-modifier">+1</p>
+            <p class="ability-score">12</p>
+            <p class="ability-name">CHARISMA</p>
+          </div>
+          <div class="col skills-and-saves">
+            <ul class="skills">
+              <li class="saving-throw">
+                <span class="modifier">+2</span>
+                <span class="label">SAVING THROWS</span>
+              </li>
+              <li class="skill">
+                <span class="modifier">+1</span>
+                <span class="label">DECEPTION</span>
+              </li>
+              <li class="skill">
+                <span class="modifier">+1</span>
+                <span class="label">INTIMIDATION</span>
+              </li>
+              <li class="skill">
+                <span class="modifier">+1</span>
+                <span class="label">PERFORMANCE</span>
+              </li>
+              <li class="skill">
+                <span class="modifier">+1</span>
+                <span class="label">PERSUASION</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="row stat-group">
+          <div class="col">
+            <div class="row">
+              <div class="col">
+                <div class="armor">
+                  <p class="armor-score">17</p>
+                </div>
+                <div class="armor-label">
+                  <p class="label">ARMOR CLASS</p>
+                </div>
+              </div>
+              <div class="col">
+                <div class="speed">
+                  <p class="speed-score">35</p>
+                  <p class="label">SPEED</p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="hit-points">
+                  <p>36<span class="out-of">/36</span></p>
+                  <p class="label">CURRENT HIT POINTS</p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="hit-points">
+                  <p>0</p>
+                  <p class="label">TEMPORARY HIT POINTS</p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col hit-points hit-dice">
+                  <p>3d8<span class="out-of">/3d8</span></p>
+                  <p class="label">HIT DICE</p>
+              </div>
+              <div class="col death-saves hit-points">
+                  <p class="label">SUCCESSES<img src="death-save.svg" /></p>
+                  <p class="label">FAILURES<img src="death-save.svg" /></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row attacks">
+          <div class="col">
+            <table>
+              <thead>
+                <tr>
+                  <th>NAME</th>
+                  <th>RANGE</th>
+                  <th>ATK</th>
+                  <th>DAMAGE</th>
+                  <th>PROPERTIES</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Handaxe</td>
+                  <td>5/20/60</td>
+                  <td>+5</td>
+                  <td>1d6+3 slashing</td>
+                  <td>light, thrown</td>
+                </tr>
+                <tr>
+                  <td>Dart</td>
+                  <td>20/60</td>
+                  <td>+5</td>
+                  <td>1d4+3 piercing</td>
+                  <td>finesse, thrown</td>
+                </tr>
+                <tr>
+                  <td>Unarmed</td>
+                  <td>5</td>
+                  <td>+5</td>
+                  <td>1d4+3 bludgeoning</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Silvered Short Sword</td>
+                  <td>5</td>
+                  <td>+5</td>
+                  <td>1d6+3 slashing</td>
+                  <td>finesse, light</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan=5>
+                    ATTACKS
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+        <div class="row features">
+          <div class="column">
+            <ul>
+              <li><em>Darkvision</em> - You can see in dim light within
+                60 feet of you as if it were bright light, and in darkness
+                as if it were dim light. You can't discern color in darkness
+                only shades of gray.
+              </li>
+              <li>
+                <em>Dwarven Resilience</em> - You have advantage on saving throws
+                against poison, and you have resistance against poison damage.
+              </li>
+              <li><em>Stonecunning</em> - Whenever you make an Intelligence
+                (History) check related to the origin of stonework, you are
+                considered expert in the History skill (double proficiency).
+              </li>
+              <li><em>Dwarven Toughness</em> - Your hit point maximum increases
+                by 1 for every level.
+              </li>
+
+            </ul>
+            <p class="label">RACIAL FEATURES</p>
+          </div>
+        </div>
+        <div class="row features">
+          <div class="column">
+            <ul>
+              <li>
+                <em>Unarmored Defense</em> - While you are not wearing armor
+                (or shield), your AC is 10 + your DEX modifier + your WIS
+                modifier.
+              </li>
+              <li>
+                <p><em>Martial Arts</em> - While not wearing armor and while
+                unarmed or using monk weapons only, you can use your DEX
+                modifier instead of your STR modifier for attack and damage
+                rolls, you can roll martial arts damage instead of normal
+                damage and you can make an unarmed strike as a bonus action
+                after your attack.</p>
+                <p><em>Martial Arts Damage</em> - 1d4</p>
+              </li>
+              <li>
+                <p><em>Ki</em> - You have a number of Ki points equal to your
+                monk level. You regain these Ki points after a short or long
+                rest.</p>
+                <p><em>Max Ki Points</em> - 3</p>
+                <p><em>Ki Save DC</em> - 13</p>
+              </li>
+              <li>
+                <em>Flurry of Blows</em> - Immediately after you take the
+                Attack action on your turn, you can spend 1 ki point to
+                make two unarmed strikes as a bonus action.
+              </li>
+              <li>
+                <em>Patient Defense</em> - You can spend 1 ki point to take the
+                Dodge action as a bonus action on your turn.
+              </li>
+              <li>
+                <em>Step of the Wind</em> - You can spend 1 ki point to take
+                the Disengage or Dash action as a bonus action on your turn,
+                and your jump distance is doubled for the turn.
+              </li>
+              <li>
+                <p><em>Unarmored Movement</em> - Your speed increases while not
+                wearing armor (or shield).</p>
+                <p><em>Speed Increase</em> - +10</p>
+              </li>
+              <li>
+                <p><em>Deflect Missiles</em> - As a reaction you can catch a
+                  missile that hits you. First, reduce the damage by
+                  1d10 + your DEX modifier + your monk level. If you reduce
+                  the damage to 0, you catch it if you have a free hand.
+                  Spend 1 ki to make a ranged attack with the missile you
+                  caught. You have proficiency withthe attack and it counts as
+                  a monk weapon attack.</p>
+              </li>
+              <li>
+                <p><em>Shadow Arts</em> - As an action, spend 2 ki points to
+                  cast Darkness, Darkvision, Pass Without Trace or Silence
+                  without providing material components. Additionally, you gain
+                  the Minor Illusion cantrip.
+              </li>
+            </ul>
+            <p class="label">MONK FEATURES</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,271 @@
+body {
+  border-style: solid;
+  border-radius: 10px;
+  margin: 1em;
+  padding: 1em;
+}
+
+.subtitle {
+  margin-top: 0;
+  font-size: 60%;
+  font-weight: 400;
+  color: #868e96!important;
+}
+
+header h1, header h2, header h3, header h4, header h5, header h6 {
+  margin-bottom: 0;
+}
+
+.label {
+  font-size: 80%;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.out-of {
+  color: #868e96;
+}
+
+.skills-and-saves ul {
+  list-style: none;
+  margin-bottom: 2px;
+}
+
+.skills-and-saves ul li::before {
+  border-style: none;
+  display: inline-block;
+  position: relative;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  margin-right: 4px;
+  top: 2px;
+}
+
+.skill::before {
+    content: url('../images/skill-none.svg');
+    margin-left: -50px;
+}
+
+.skill.proficient::before {
+  content: url('../images/skill-proficient.svg');
+}
+
+.skill.expert::before {
+  content: url('../images/skill-expert.svg');
+}
+
+.saving-throw::before {
+  content: url('../images/saving-throw-none.svg');
+  margin-left: -40px;
+  padding-right: 10px;
+}
+
+.saving-throw.proficient::before {
+  content: url('../images/saving-throw-proficient.svg')
+}
+
+.standalone-stat div.modifier {
+  border-right-style: solid;
+}
+
+
+div.ability {
+  margin-left: 5px;
+  text-align: center;
+  border-style: solid;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background-color: white;
+}
+
+div.ability > p {
+  text-align:center;
+}
+
+.skills-and-saves li {
+  font-size: 0.7em;
+}
+
+div.ability > .ability-modifier {
+  font-size: 1.2em;
+  border-style: solid;
+  border-top-style: none;
+  margin-bottom: 2px;
+}
+div.ability > .ability-score {
+  font-size: 2.0em;
+  margin-bottom: 2px;
+}
+div.ability > .ability-name {
+  font-size: 0.6em;
+  margin-top: -3px;
+  margin-bottom: 2px;
+  vertical-align: bottom;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+div.skills-and-saves {
+  border-top-style: solid;
+  border-radius: 10px;
+  background-color: white;
+  margin-bottom: 10px;
+}
+
+div.standalone-stat {
+  border-style: solid;
+  border-radius: 1em;
+  margin-bottom: 4px;
+  background-color: white;
+}
+div.standalone-stat p {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.stat-group {
+  background-color: #eeeeee;
+  padding: 1em 2em 1em 2em;
+  margin-left: 0;
+  border-radius: 1em;
+}
+
+.row.stat-group {
+  padding: 1em 0 1em 0;
+}
+
+.armor {
+  background-image: url('../images/shield.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center center;
+  background-attachment: local;
+}
+
+.armor-score, .speed-score {
+  padding: 15px;
+  font-size: 175%;
+  text-align: center;
+  margin-bottom: 3px;
+}
+
+.armor-label .label,
+.speed .label,
+.hit-points .label {
+  text-align: center;
+  font-size: 60%;
+  margin-bottom: 3px;
+}
+
+.speed {
+  border-style: solid;
+  border-radius: 10px;
+  background-color: white;
+}
+
+.hit-points {
+  text-align: center;
+  padding-top: 10px;
+  border-style: solid;
+  margin-top: 4px;
+  border-radius: 10px;
+  background-color: white;
+}
+
+.hit-points p {
+  font-size: 200%;
+  margin-bottom: 2px;
+}
+
+.hit-dice {
+  margin-right: 4px;
+  margin-left: 15px;
+}
+
+.hit-dice p {
+  font-size: 100%;
+}
+
+.death-saves {
+  margin-right: 15px;
+  padding-left: 0;
+  padding-right: 5px;
+}
+
+.death-saves img {
+  display: inline;
+  margin-left: 3px;
+}
+
+.death-saves .label {
+  text-align: right;
+  padding-right: 5px;
+}
+
+.attacks {
+  margin-top: 4px;
+}
+
+.attacks .col {
+  padding-right: 0;
+}
+
+.attacks table {
+  border-collapse: separate;
+  border-spacing: 0.25rem;
+  border-style: solid;
+  border-color: black;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.attacks th {
+  font-size: 60%;
+}
+
+.attacks td {
+  font-size: 60%;
+  background-color: #eeeeee;
+  padding: 0.25rem;
+  border-radius: 2px;
+}
+
+.attacks tfoot td {
+  background-color: white;
+  text-align: center;
+  font-weight: bold;
+}
+
+
+.ki-features thead td {
+  background-color: white;
+  text-align: center;
+  font-size: 70%;
+  font-weight: bolder;
+}
+
+.features {
+  font-size: 60%;
+}
+
+.features.row {
+  border-style: solid;
+  border-radius: 10px;
+  border-color: black;
+  margin-top: 4px;
+  margin-left: 0;
+}
+
+.features .label {
+  font-size: 100%;
+  text-align: center;
+  margin-bottom: 3px;
+}
+
+.features p {
+  margin-bottom: 3px;
+}
+
+.features em {
+  font-weight: bold;
+}
