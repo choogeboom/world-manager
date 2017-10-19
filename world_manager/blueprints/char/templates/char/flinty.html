@@ -20,7 +20,7 @@
       'other': []},
     'saving_throws': {
       'proficient': 1,
-      'other': [1]},
+      'other': [('Cloak of Protection', 1)]},
     'skills': {
       'athletics': {
         'proficient': 0,
@@ -32,11 +32,11 @@
     'score': {
       'base': 17,
       'racial': 0,
-      'other': [],
+      'other': [('ASI @ 4', 1)],
     },
     'saving_throws': {
       'proficient': 1,
-      'other': [1]
+      'other': [('Cloak of Protection', 1)]
     },
     'skills': {
       'acrobatics': {
@@ -57,11 +57,11 @@
     'score': {
       'base': 15,
       'racial': 2,
-      'other': []
+      'other': [('ASI @ 4', 1)]
     },
     'saving_thorws': {
       'proficient': 0,
-      'other': [1]
+      'other': [('Cloak of Protection', 1)]
     },
     'skills': {}
   },
@@ -73,12 +73,12 @@
     },
     'saving_throws': {
       'proficient': 0,
-      'other': [1]
+      'other': [('Cloak of Protection', 1)]
     },
     'skills': {
       'arcana': {
         'proficient': 0,
-        'other': []
+        'other': [('Cloak of Protection', 1)]
       },
       'history': {
         'proficient': 0,
@@ -106,7 +106,7 @@
     },
     'saving_throws': {
       'proficient': 0,
-      'other': [1]
+      'other': [('Cloak of Protection', 1)]
     },
     'skills': {
       'animal_handling': {
@@ -139,7 +139,7 @@
     },
     'saving_throws': {
       'proficient': 0,
-      'other': [1]
+      'other': [('Cloak of Protection', 1)]
     },
     'skills': {
       'deception': {
@@ -236,8 +236,8 @@
         <div class="row standalone-stat">
           <div class="col-3 modifier">
             <p><span id="passive-perception">
-              {{ abilities['wisdom']|skill_modifier('perception',
-                                                      proficiency_bonus) }}
+              {{ '%+d' |format(skill_modifier(abilities['wisdom'], 'perception',
+                                                     proficiency_bonus)) }}
             </span>
           </div>
           <div class="col">

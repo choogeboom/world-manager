@@ -9,9 +9,15 @@ def current_year() -> int:
     return tz_aware_now().year
 
 
-def ability_modifier(ability: dict):
+def ability_score(ability: dict):
+    other_bonuses = (v for d, v in ability['score']['other'])
     return ability['score']['base'] + ability['score']['racial'] \
-           + sum(ability['score']['other'])
+        + sum(other_bonuses)
+
+
+def ability_modifier(ability: dict):
+    score = ability_score(ability)
+    return (score - 10) // 2
 
 
 def saving_throw_modifier(ability: dict, proficiency_bonus: int):
@@ -21,6 +27,6 @@ def saving_throw_modifier(ability: dict, proficiency_bonus: int):
 
 
 def skill_modifier(ability: dict, skill, proficiency_bonus):
-    return ability_modifier(ability) \
-           + ability['skills'][skill]['proficient']*proficiency_bonus \
-           + sum(ability['skills'][skill]['other'])
+    proficiency = ability['skills'][skill]['proficient']*proficiency_bonus
+    other_bonuses = (v for d, v in ability['skills'][skill]['other'])
+    return ability_modifier(ability) + proficiency + sum(other_bonuses)
