@@ -17,7 +17,7 @@
       {% endif %}
       <li class="{{ cls }}">
         <span class="modifier"
-              title="{{ format_other_bonuses( }}">{{ '%+d'|format(saving_throw_modifier(ability, proficiency_bonus)) }}</span>
+              title="">{{ '%+d'|format(saving_throw_modifier(ability, proficiency_bonus)) }}</span>
         <span class="label">SAVING THROWS</span>
       </li>
       {% for skill_name in ability['skills'] %}

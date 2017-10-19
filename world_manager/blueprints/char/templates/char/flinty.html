@@ -286,8 +286,6 @@
                   <p class="label">CURRENT HIT POINTS</p>
                 </div>
               </div>
-            </div>
-            <div class="row">
               <div class="col">
                 <div class="hit-points">
                   <p>0</p>
@@ -297,12 +295,17 @@
             </div>
             <div class="row">
               <div class="col hit-points hit-dice">
-                  <p>3d8<span class="out-of">/3d8</span></p>
+                  <p>4d8<span class="out-of">/4d8</span></p>
                   <p class="label">HIT DICE</p>
               </div>
               <div class="col death-saves hit-points">
-                  <p class="label">SUCCESSES<img src="death-save.svg" /></p>
-                  <p class="label">FAILURES<img src="death-save.svg" /></p>
+                <p class="label">SUCCESSES
+                  <img src="{{ url_for('static', filename='images/death-save.svg') }}" />
+                </p>
+                <p class="label">FAILURES
+                  <img src="{{ url_for('static', filename='images/death-save.svg') }}" />
+                </p>
+                <p class="label">DEATH SAVES</p>
               </div>
             </div>
           </div>
@@ -323,30 +326,37 @@
                 <tr>
                   <td>Handaxe</td>
                   <td>5/20/60</td>
-                  <td>+5</td>
-                  <td>1d6+3 slashing</td>
+                  <td>+6</td>
+                  <td>1d6+4 slashing</td>
                   <td>light, thrown</td>
                 </tr>
                 <tr>
                   <td>Dart</td>
                   <td>20/60</td>
-                  <td>+5</td>
-                  <td>1d4+3 piercing</td>
+                  <td>+6</td>
+                  <td>1d4+4 piercing</td>
                   <td>finesse, thrown</td>
                 </tr>
                 <tr>
                   <td>Unarmed</td>
                   <td>5</td>
-                  <td>+5</td>
-                  <td>1d4+3 bludgeoning</td>
+                  <td>+6</td>
+                  <td>1d4+4 bludgeoning</td>
                   <td></td>
                 </tr>
                 <tr>
                   <td>Silvered Short Sword</td>
                   <td>5</td>
-                  <td>+5</td>
-                  <td>1d6+3 slashing</td>
+                  <td>+6</td>
+                  <td>1d6+4 slashing</td>
                   <td>finesse, light</td>
+                </tr>
+                <tr>
+                  <td>Light Crossbow</td>
+                  <td>80/320</td>
+                  <td>+6</td>
+                  <td>1d8+4 piercing</td>
+                  <td>ammunition, loading, two-handed</td>
                 </tr>
               </tbody>
               <tfoot>
@@ -440,6 +450,10 @@
                   cast Darkness, Darkvision, Pass Without Trace or Silence
                   without providing material components. Additionally, you gain
                   the Minor Illusion cantrip.
+              </li>
+              <li>
+                <p><em>Slow Fall</em> - As a reaction, reduce your fall damage
+                  by 5 times your monk level.</p>
               </li>
             </ul>
             <p class="label">MONK FEATURES</p>
