@@ -1,16 +1,17 @@
 {% extends 'layouts/base.html' %}
+{% import 'macros/character.html' as c %}
 
 {% set title='Flinty Slatemuncher' %}
 {% set additional_styles = ['character_sheet.css'] %}
 
 {% set character_name = 'Flinty Slatemuncher' %}
-{% set character_classes = ['Monk 3'] %}
+{% set character_classes = ['Monk 4'] %}
 {% set character_background = 'Hermit' %}
 {% set player_name = 'Chris' %}
 {% set character_race = 'Hill Dwarf' %}
 {% set alignment = 'Chaotic Neutral' %}
-{% set current_xp = 2150 %}
-{% set next_level_xp = 2700 %}
+{% set current_xp = 2710 %}
+{% set next_level_xp = 6500 %}
 {% set proficiency_bonus = 2 %}
 {% set abilities = {
   'strength': {
@@ -59,7 +60,7 @@
       'racial': 2,
       'other': [('ASI @ 4', 1)]
     },
-    'saving_thorws': {
+    'saving_throws': {
       'proficient': 0,
       'other': [('Cloak of Protection', 1)]
     },
@@ -78,7 +79,7 @@
     'skills': {
       'arcana': {
         'proficient': 0,
-        'other': [('Cloak of Protection', 1)]
+        'other': []
       },
       'history': {
         'proficient': 0,
@@ -153,19 +154,30 @@
       'performance': {
         'proficient': 0,
         'other': []
+      },
+      'persuasion': {
+        'proficient': 0,
+        'other': []
       }
     }
   }
 }
  %}
-
+{% set armor_score = {'base': 10,
+                      'other':[
+                        ('Unarmored Defense',
+                          ability_modifier(abilities['dexterity'])
+                                           + ability_modifier(abilities['wisdom'])
+                        )
+                       ]
+                     } %}
 
 {% block content %}
   <div class="character-sheet container-fluid">
     <div class="row">
       <div class="col-4">
         <header>
-          <h1 id="character-name">{{ character_name }}</h1>
+          <h2 id="character-name">{{ character_name }}</h2>
           <p class="subtitle">CHARACTER NAME</p>
         </header>
       </div>
@@ -244,168 +256,9 @@
             <p class="label">PASSIVE WISDOM (PERCEPTION)</p>
           </div>
         </div>
-        <div class="row strength-ability">
-          <div class="col-7 col-sm-6 col-md-5 col-lg-4 col-xl-3 ability">
-            <p class="ability-modifier">+2</p>
-            <p class="ability-score">13</p>
-            <p class="ability-name">STRENGTH</p>
-          </div>
-          <div class="col skills-and-saves">
-            <ul>
-              <li class="proficient saving-throw">
-                <span class="modifier">+5</span>
-                <span class="label">SAVING THROWS</span>
-              </li>
-              <li class="skill">
-                <span class="modifier">+2</span>
-                <span class="label">ATHLETICS</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="row dexterity-ability">
-          <div class="col-7 col-sm-6 col-md-5 col-lg-4 col-xl-3 ability">
-            <p class="ability-modifier">+3</p>
-            <p class="ability-score">17</p>
-            <p class="ability-name">DEXTERITY</p>
-          </div>
-          <div class="col skills-and-saves">
-            <ul>
-              <li class="proficient saving-throw">
-                <span class="modifier">+6</span>
-                <span class="label">SAVING THROWS</span>
-              </li>
-              <li class="proficient skill">
-                <span class="modifier">+5</span>
-                <span class="label">ACROBATICS</span>
-              </li>
-              <li class="skill">
-                <span class="modifier">+3</span>
-                <span class="label">SLEIGHT OF HAND</span>
-              </li>
-              <li class="proficient skill">
-                <span class="modifier">+5</span>
-                <span class="label">STEALTH</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="row constitution-ability">
-          <div class="col-7 col-sm-6 col-md-5 col-lg-4 col-xl-3 ability">
-            <p class="ability-modifier">+3</p>
-            <p class="ability-score">17</p>
-            <p class="ability-name">CONSTITUTION</p>
-          </div>
-          <div class="col skills-and-saves">
-            <ul>
-              <li class="saving-throw">
-                <span class="modifier">+4</span>
-                <span class="label">SAVING THROWS</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="row intelligence-ability">
-          <div class="col-7 col-sm-6 col-md-5 col-lg-4 col-xl-3 ability">
-            <p class="ability-modifier">+1</p>
-            <p class="ability-score">12</p>
-            <p class="ability-name">INTELLIGENCE</p>
-          </div>
-          <div class="col skills-and-saves">
-            <ul>
-              <li class="saving-throw">
-                <span class="modifier">+2</span>
-                <span class="label">SAVING THROWS</span>
-              </li>
-              <li class="skill">
-                <span class="modifier">+1</span>
-                <span class="label">ARCANA</span>
-              </li>
-              <li class="skill">
-                <span class="modifier">+1</span>
-                <span class="label">HISTORY</span>
-              </li>
-              <li class="skill">
-                <span class="modifier">+1</span>
-                <span class="label">INVESTIGATION</span>
-              </li>
-              <li class="skill">
-                <span class="modifier">+1</span>
-                <span class="label">NATURE</span>
-              </li>
-              <li class="proficient skill">
-                <span class="modifier">+1</span>
-                <span class="label">RELIGION</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="row wisdom-ability">
-          <div class="col-7 col-sm-6 col-md-5 col-lg-4 col-xl-3 ability">
-            <p class="ability-modifier">+3</p>
-            <p class="ability-score">16</p>
-            <p class="ability-name">WISDOM</p>
-          </div>
-          <div class="col skills-and-saves">
-            <ul>
-              <li class="saving-throw">
-                <span class="modifier">+4</span>
-                <span class="label">SAVING THROWS</span>
-              </li>
-              <li class="skill">
-                <span class="modifier">+3</span>
-                <span class="label">ANIMAL HANDLING</span>
-              </li>
-              <li class="skill">
-                <span class="modifier">+3</span>
-                <span class="label">INSIGHT</span>
-              </li>
-              <li class="proficient skill">
-                <span class="modifier">+5</span>
-                <span class="label">MEDICINE</span>
-              </li>
-              <li class="skill">
-                <span class="modifier">+3</span>
-                <span class="label">PERCEPTION</span>
-              </li>
-              <li class="skill">
-                <span class="modifier">+3</span>
-                <span class="label">SURVIVAL</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="row charisma-ability">
-          <div class="col-7 col-sm-6 col-md-5 col-lg-4 col-xl-3 ability">
-            <p class="ability-modifier">+1</p>
-            <p class="ability-score">12</p>
-            <p class="ability-name">CHARISMA</p>
-          </div>
-          <div class="col skills-and-saves">
-            <ul class="skills">
-              <li class="saving-throw">
-                <span class="modifier">+2</span>
-                <span class="label">SAVING THROWS</span>
-              </li>
-              <li class="skill">
-                <span class="modifier">+1</span>
-                <span class="label">DECEPTION</span>
-              </li>
-              <li class="skill">
-                <span class="modifier">+1</span>
-                <span class="label">INTIMIDATION</span>
-              </li>
-              <li class="skill">
-                <span class="modifier">+1</span>
-                <span class="label">PERFORMANCE</span>
-              </li>
-              <li class="skill">
-                <span class="modifier">+1</span>
-                <span class="label">PERSUASION</span>
-              </li>
-            </ul>
-          </div>
-        </div>
+        {% for ability_name in abilities %}
+          {{ c.render_ability(ability_name, abilities[ability_name], proficiency_bonus) }}
+        {% endfor %}
       </div>
       <div class="col">
         <div class="row stat-group">
