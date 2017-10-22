@@ -34,3 +34,8 @@ def skill_modifier(ability: dict, skill, proficiency_bonus):
 
 def format_other_bonuses(other):
     return ', '.join(f'{d}: {v:+d}' for d, v in other)
+
+
+def armor_score(armor):
+    other_bonuses = (v for d, v in armor['other'])
+    return armor['base'] + sum(other_bonuses)

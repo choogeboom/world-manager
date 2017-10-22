@@ -1,7 +1,7 @@
 {# Render an ability #}
 {%- macro render_ability(ability_name, ability, proficiency_bonus) %}
 <div id="{{ ability_name }}-ability" class="row">
-  <div class="col-6 col-sm-5 col-md-4 col-lg-3 col-xl-3 ability">
+  <div class="col-6 col-sm-6 col-md-5 col-lg-4 col-xl-3 ability">
     <p class="ability-modifier">{{ '%+d'|format(ability_modifier(ability)) }}</p>
     <p class="ability-score">{{ ability_score(ability) }}</p>
     <p class="ability-name">{{ ability_name | upper }}</p>
@@ -17,7 +17,9 @@
       {% endif %}
       <li class="{{ cls }}">
         <span class="modifier"
-              title="">{{ '%+d'|format(saving_throw_modifier(ability, proficiency_bonus)) }}</span>
+              title="{{ format_other_bonuses(ability['saving_throws']['other']) }}">
+          {{ '%+d'|format(saving_throw_modifier(ability, proficiency_bonus)) }}
+        </span>
         <span class="label">SAVING THROWS</span>
       </li>
       {% for skill_name in ability['skills'] %}
@@ -31,7 +33,7 @@
       <li class="{{ cls }}">
         <span class="modifier">{{ '%+d'|format(
           skill_modifier(ability, skill_name, proficiency_bonus)) }}</span>
-        <span class="label">{{ skill_name | upper }}</span>
+        <span class="label">{{ skill_name | upper | replace('_', ' ') }}</span>
       </li>
       {% endfor %}
     </ul>

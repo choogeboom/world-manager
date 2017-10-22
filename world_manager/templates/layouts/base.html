@@ -55,7 +55,7 @@
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-12" id="page-content-wrapper">
+    <div class="col" id="page-content-wrapper">
       {{ flash.render() }}
       <div id=main-content" class="md-margin-top">
         {% block content_header %}{% endblock %}
@@ -66,16 +66,15 @@
     </div>
   </div>
 </div>
-
 <footer class="footer text-center">
-  <div class="container">
     <ul class="list-inline">
       <li class="text-muted">{{ application_name }} &copy; {{ current_year() }}</li>
       {% block footer %}
       {% endblock %}
     </ul>
-  </div>
+
 </footer>
+
 
 
 

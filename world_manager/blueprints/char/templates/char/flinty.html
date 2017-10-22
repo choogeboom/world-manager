@@ -163,12 +163,13 @@
   }
 }
  %}
-{% set armor_score = {'base': 10,
+{% set armor = {'base': 10,
                       'other':[
                         ('Unarmored Defense',
                           ability_modifier(abilities['dexterity'])
                                            + ability_modifier(abilities['wisdom'])
-                        )
+                        ),
+                        ('Cloak of Protection', 1)
                        ]
                      } %}
 
@@ -177,7 +178,7 @@
     <div class="row">
       <div class="col-4">
         <header>
-          <h2 id="character-name">{{ character_name }}</h2>
+          <h3 id="character-name">{{ character_name }}</h3>
           <p class="subtitle">CHARACTER NAME</p>
         </header>
       </div>
@@ -185,19 +186,19 @@
         <div class="row">
           <div class="col">
             <header>
-              <h4 id="character-classes">{{ character_classes | join(', ') }}</h4>
+              <h5 id="character-classes">{{ character_classes | join(', ') }}</h5>
               <p class="subtitle">CLASS &amp; LEVEL</p>
             </header>
           </div>
           <div class="col">
             <header>
-              <h4 id="character-background">{{ character_background }}</h4>
+              <h5 id="character-background">{{ character_background }}</h5>
               <p class="subtitle">BACKGROUND</p>
             </header>
           </div>
           <div class="col">
             <header>
-              <h4 id="player-name">{{ player_name }}</h4>
+              <h5 id="player-name">{{ player_name }}</h5>
               <p class="subtitle">PLAYER NAME</p>
             </header>
           </div>
@@ -205,22 +206,22 @@
         <div class="row">
           <div class="col">
             <header>
-              <h4 id="character-race">{{ character_race }}</h4>
+              <h5 id="character-race">{{ character_race }}</h5>
               <p class="subtitle">RACE</p>
             </header>
           </div>
           <div class="col">
             <header>
-              <h4 id="alignment">{{ alignment }}</h4>
+              <h5 id="alignment">{{ alignment }}</h5>
               <p class="subtitle">ALIGNMENT</p>
             </header>
           </div>
           <div class="col">
             <header>
-              <h4 id="xp">
+              <h5 id="xp">
                 {{ current_xp }}
                 <span class="out-of">/{{ next_level_xp }}</span>
-              </h4>
+              </h5>
               <p class="subtitle">EXPERIENCE POINTS</p>
             </header>
           </div>
@@ -228,37 +229,39 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-6 col-4-md stat-group">
-        <div class="row standalone-stat">
-          <div class="col-3 modifier">
-            <p class="proficiency-bonus">{{ '%+d'|format(proficiency_bonus) }}</p>
+      <div class="col">
+        <div class="stat-group">
+          <div class="row standalone-stat">
+            <div class="col-3 modifier">
+              <p class="proficiency-bonus">{{ '%+d'|format(proficiency_bonus) }}</p>
+            </div>
+            <div class="col">
+              <p class="label">PROFICIENCY BONUS</p>
+            </div>
           </div>
-          <div class="col">
-            <p class="label">PROFICIENCY BONUS</p>
+          <div class="row standalone-stat">
+            <div class="col-3 modifier">
+              <p class="inspiration"></p>
+            </div>
+            <div class="col">
+              <p class="label">INSPIRATION</p>
+            </div>
           </div>
+          <div class="row standalone-stat">
+            <div class="col-3 modifier">
+              <p><span id="passive-perception">
+                {{ '%+d' |format(skill_modifier(abilities['wisdom'], 'perception',
+                                                       proficiency_bonus)) }}
+              </span>
+            </div>
+            <div class="col">
+              <p class="label">PASSIVE WISDOM (PERCEPTION)</p>
+            </div>
+          </div>
+          {% for ability_name in abilities %}
+            {{ c.render_ability(ability_name, abilities[ability_name], proficiency_bonus) }}
+          {% endfor %}
         </div>
-        <div class="row standalone-stat">
-          <div class="col-3 modifier">
-            <p class="inspiration"></p>
-          </div>
-          <div class="col">
-            <p class="label">INSPIRATION</p>
-          </div>
-        </div>
-        <div class="row standalone-stat">
-          <div class="col-3 modifier">
-            <p><span id="passive-perception">
-              {{ '%+d' |format(skill_modifier(abilities['wisdom'], 'perception',
-                                                     proficiency_bonus)) }}
-            </span>
-          </div>
-          <div class="col">
-            <p class="label">PASSIVE WISDOM (PERCEPTION)</p>
-          </div>
-        </div>
-        {% for ability_name in abilities %}
-          {{ c.render_ability(ability_name, abilities[ability_name], proficiency_bonus) }}
-        {% endfor %}
       </div>
       <div class="col">
         <div class="row stat-group">
@@ -266,7 +269,7 @@
             <div class="row">
               <div class="col">
                 <div class="armor">
-                  <p class="armor-score">17</p>
+                  <p class="armor-score">{{ armor_score(armor) }}</p>
                 </div>
                 <div class="armor-label">
                   <p class="label">ARMOR CLASS</p>
@@ -282,7 +285,7 @@
             <div class="row">
               <div class="col">
                 <div class="hit-points">
-                  <p>36<span class="out-of">/36</span></p>
+                  <p>45<span class="out-of">/45</span></p>
                   <p class="label">CURRENT HIT POINTS</p>
                 </div>
               </div>
@@ -369,8 +372,10 @@
             </table>
           </div>
         </div>
+      </div>
+      <div class="col">
         <div class="row features">
-          <div class="column">
+          <div class="col">
             <ul>
               <li><em>Darkvision</em> - You can see in dim light within
                 60 feet of you as if it were bright light, and in darkness
@@ -394,7 +399,7 @@
           </div>
         </div>
         <div class="row features">
-          <div class="column">
+          <div class="col">
             <ul>
               <li>
                 <em>Unarmored Defense</em> - While you are not wearing armor

@@ -16,7 +16,7 @@ from world_manager.blueprints.user.views import user
 from world_manager.blueprints.char.views import char
 
 from utils.jinja import current_year, ability_modifier, saving_throw_modifier, \
-    skill_modifier, ability_score, format_other_bonuses
+    skill_modifier, ability_score, format_other_bonuses, armor_score
 
 ACTIVE_EXTENSIONS = [db, debug_toolbar, jsglue, mail, csrf, login_manager]
 ACTIVE_BLUEPRINTS = [page, contact, user, char]
@@ -118,4 +118,5 @@ def initialize_jinja2(app: Flask) -> None:
                                  saving_throw_modifier=saving_throw_modifier,
                                  skill_modifier=skill_modifier,
                                  ability_score=ability_score,
-                                 format_other_bonuses=format_other_bonuses)
+                                 format_other_bonuses=format_other_bonuses,
+                                 armor_score=armor_score)
