@@ -1,13 +1,17 @@
 body {
-    border-style: solid;
-    border-radius: 10px;
-    margin: 1em;
     padding: 0;
 }
 
-.container-fluid {
-    padding-left: 3px;
-    padding-right: 10px;
+.character-sheet {
+    border-style: solid;
+    border-radius: 10px;
+    margin: 1rem;
+    padding: 1px;
+    width: 720px;
+}
+
+header h1, header h2, header h3, header h4, header h5, header h6 {
+    margin-bottom: 0;
 }
 
 .subtitle {
@@ -18,17 +22,29 @@ body {
 }
 
 .col {
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .row {
     margin: 0;
 }
 
-header h1, header h2, header h3, header h4, header h5, header h6 {
-    margin-bottom: 0;
+.stat-group {
+    background-color: #eeeeee;
+    padding: 0.25em;
+    margin: 3px;
+    border-radius: 1rem;
 }
+
+.standalone-stat {
+    font-size: 8pt;
+}
+
+.standalone-stat .modifier {
+    border-right-style: solid;
+}
+
 
 .label {
     font-size: 80%;
@@ -79,14 +95,6 @@ header h1, header h2, header h3, header h4, header h5, header h6 {
     content: url('../images/saving-throw-proficient.svg')
 }
 
-.standalone-stat div.modifier {
-    border-right-style: solid;
-}
-
-.standalone-stat {
-    font-size: small;
-}
-
 div.ability {
     text-align: center;
     border-style: solid;
@@ -97,6 +105,7 @@ div.ability {
 
 div.ability > p {
     text-align: center;
+    padding: 3px;
 }
 
 .skills-and-saves li {
@@ -120,8 +129,8 @@ div.ability > .ability-name {
     margin-top: -3px;
     margin-bottom: 2px;
     vertical-align: bottom;
-    margin-left: -8px;
-    margin-right: -8px;
+    margin-left: -16px;
+    margin-right: -16px;
 }
 
 div.skills-and-saves {
@@ -145,23 +154,10 @@ div.standalone-stat p {
     margin-bottom: 4px;
 }
 
-.stat-group {
-    background-color: #eeeeee;
-    padding: 0.25em;
-    margin-left: 0;
-    border-radius: 1em;
-}
-.stat-group .row {
-    margin-left: 2px;
-    margin-right: 2px;
-}
-
 .armor {
-    background-image: url('../images/shield.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center center;
-    background-attachment: local;
+    border-style: solid;
+    border-radius: 10px;
+    background-color: white;
 }
 
 .armor-score, .speed-score {
@@ -224,49 +220,34 @@ div.standalone-stat p {
     padding-right: 5px;
 }
 
-.attacks {
-    margin-top: 4px;
-}
-
-.attacks .col {
-    padding-right: 0;
-}
-
-.attacks table {
-    border-collapse: separate;
-    border-spacing: 0.25rem;
+.attack {
     border-style: solid;
-    border-color: black;
     border-radius: 10px;
-    width: 100%;
+    margin-top: 3px;
 }
 
-.attacks th {
-    font-size: 60%;
+.attack p {
+    margin-bottom: 0;
 }
 
-.attacks td {
-    font-size: 60%;
-    background-color: #eeeeee;
-    padding: 0.25rem;
-    border-radius: 2px;
+.attack .label {
+    font-size: 50%;
+    border-style: solid;
+    border-width: 1px;
+    border-bottom-right-radius: 1em;
+    border-top-right-radius: 1em;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    padding: 2px;
+
 }
 
-.attacks tfoot td {
-    background-color: white;
-    text-align: center;
-    font-weight: bold;
-}
-
-.ki-features thead td {
-    background-color: white;
-    text-align: center;
+.attack .value {
     font-size: 70%;
-    font-weight: bolder;
 }
 
 .features {
-    font-size: 60%;
+    font-size: 50%;
 }
 
 .features.row {

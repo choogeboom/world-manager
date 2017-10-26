@@ -10,7 +10,7 @@
 {% set player_name = 'Chris' %}
 {% set character_race = 'Hill Dwarf' %}
 {% set alignment = 'Chaotic Neutral' %}
-{% set current_xp = 2710 %}
+{% set current_xp = 3260 %}
 {% set next_level_xp = 6500 %}
 {% set proficiency_bonus = 2 %}
 {% set abilities = {
@@ -173,6 +173,63 @@
                        ]
                      } %}
 
+{% set attacks = [
+  {
+    'name': 'Handaxe',
+    'range': '5/20/60',
+    'attack_bonus': [
+      ('Proficiency', proficiency_bonus),
+      ('Dexterity', ability_modifier(abilities.dexterity))]
+    ,
+    'damage_dice': '1d6',
+    'damage_bonus': [
+      ('Dexterity', ability_modifier(abilities.dexterity))
+    ],
+    'damage_type': 'slashing',
+    'properties': 'light, thrown'
+  },
+  {
+    'name': 'Silvered Short Sword',
+    'range': '5',
+    'attack_bonus': [('Proficiency', proficiency_bonus),
+                     ('Dexterity', ability_modifier(abilities.dexterity))],
+    'damage_dice': '1d6',
+    'damage_bonus': [('Dexterity', ability_modifier(abilities.dexterity))],
+    'damage_type': 'slashing',
+    'properties': 'finesse, light'
+  },
+  {
+    'name': 'Unarmed',
+    'range': '5',
+    'attack_bonus': [('Proficiency', proficiency_bonus),
+                     ('Dexterity', ability_modifier(abilities.dexterity))],
+    'damage_dice': '1d4',
+    'damage_bonus': [('Dexterity', ability_modifier(abilities.dexterity))],
+    'damage_type': 'bludgeoning',
+    'properties': ''
+  },
+  {
+    'name': 'Dart',
+    'range': '20/60',
+    'attack_bonus': [('Proficiency', proficiency_bonus),
+                     ('Dexterity', ability_modifier(abilities.dexterity))],
+    'damage_dice': '1d4',
+    'damage_bonus': [('Dexterity', ability_modifier(abilities.dexterity))],
+    'damage_type': 'piercing',
+    'properties': 'finesse, thrown'
+  },
+  {
+    'name': 'Light Crossbow',
+    'range': '80/320',
+    'attack_bonus': [('Proficiency', proficiency_bonus),
+                     ('Dexterity', ability_modifier(abilities.dexterity))],
+    'damage_dice': '1d8',
+    'damage_bonus': [('Dexterity', ability_modifier(abilities.dexterity))],
+    'damage_type': 'piercing',
+    'properties': 'ammunition, loading, two-handed'
+  }
+] %}
+
 {% block content %}
   <div class="character-sheet container-fluid">
     <div class="row">
@@ -233,14 +290,6 @@
         <div class="stat-group">
           <div class="row standalone-stat">
             <div class="col-3 modifier">
-              <p class="proficiency-bonus">{{ '%+d'|format(proficiency_bonus) }}</p>
-            </div>
-            <div class="col">
-              <p class="label">PROFICIENCY BONUS</p>
-            </div>
-          </div>
-          <div class="row standalone-stat">
-            <div class="col-3 modifier">
               <p class="inspiration"></p>
             </div>
             <div class="col">
@@ -249,8 +298,18 @@
           </div>
           <div class="row standalone-stat">
             <div class="col-3 modifier">
+              <p class="proficiency-bonus">
+                {{ '%+d'|format(proficiency_bonus) }}
+              </p>
+            </div>
+            <div class="col">
+              <p class="label">PROFICIENCY BONUS</p>
+            </div>
+          </div>
+          <div class="row standalone-stat">
+            <div class="col-3 modifier">
               <p><span id="passive-perception">
-                {{ '%+d' |format(skill_modifier(abilities['wisdom'], 'perception',
+                {{ '%+d' |format(skill_modifier(abilities.wisdom, 'perception',
                                                        proficiency_bonus)) }}
               </span>
             </div>
@@ -263,16 +322,16 @@
           {% endfor %}
         </div>
       </div>
-      <div class="col">
-        <div class="row stat-group">
+      <div class="col-4">
+        <div class="stat-group">
           <div class="col">
             <div class="row">
               <div class="col">
                 <div class="armor">
                   <p class="armor-score">{{ armor_score(armor) }}</p>
-                </div>
-                <div class="armor-label">
-                  <p class="label">ARMOR CLASS</p>
+                  <div class="armor-label">
+                    <p class="label">ARMOR CLASS</p>
+                  </div>
                 </div>
               </div>
               <div class="col">
@@ -285,7 +344,7 @@
             <div class="row">
               <div class="col">
                 <div class="hit-points">
-                  <p>45<span class="out-of">/45</span></p>
+                  <p>&nbsp;&nbsp;&nbsp;&nbsp;<span class="out-of">/45</span></p>
                   <p class="label">CURRENT HIT POINTS</p>
                 </div>
               </div>
@@ -297,81 +356,30 @@
               </div>
             </div>
             <div class="row">
-              <div class="col hit-points hit-dice">
+              <div class="col">
+                <div class="hit-points hit-dice">
                   <p>4d8<span class="out-of">/4d8</span></p>
                   <p class="label">HIT DICE</p>
+                </div>
               </div>
-              <div class="col death-saves hit-points">
-                <p class="label">SUCCESSES
-                  <img src="{{ url_for('static', filename='images/death-save.svg') }}" />
-                </p>
-                <p class="label">FAILURES
-                  <img src="{{ url_for('static', filename='images/death-save.svg') }}" />
-                </p>
-                <p class="label">DEATH SAVES</p>
+              <div class="col">
+                <div class="death-saves hit-points">
+                  <p class="label">SUCCESSES
+                    <img src="{{ url_for('static', filename='images/death-save.svg') }}" />
+                  </p>
+                  <p class="label">FAILURES
+                    <img src="{{ url_for('static', filename='images/death-save.svg') }}" />
+                  </p>
+                  <p class="label">DEATH SAVES</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="row attacks">
-          <div class="col">
-            <table>
-              <thead>
-                <tr>
-                  <th>NAME</th>
-                  <th>RANGE</th>
-                  <th>ATK</th>
-                  <th>DAMAGE</th>
-                  <th>PROPERTIES</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Handaxe</td>
-                  <td>5/20/60</td>
-                  <td>+6</td>
-                  <td>1d6+4 slashing</td>
-                  <td>light, thrown</td>
-                </tr>
-                <tr>
-                  <td>Dart</td>
-                  <td>20/60</td>
-                  <td>+6</td>
-                  <td>1d4+4 piercing</td>
-                  <td>finesse, thrown</td>
-                </tr>
-                <tr>
-                  <td>Unarmed</td>
-                  <td>5</td>
-                  <td>+6</td>
-                  <td>1d4+4 bludgeoning</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>Silvered Short Sword</td>
-                  <td>5</td>
-                  <td>+6</td>
-                  <td>1d6+4 slashing</td>
-                  <td>finesse, light</td>
-                </tr>
-                <tr>
-                  <td>Light Crossbow</td>
-                  <td>80/320</td>
-                  <td>+6</td>
-                  <td>1d8+4 piercing</td>
-                  <td>ammunition, loading, two-handed</td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td colspan=5>
-                    ATTACKS
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </div>
+        {% for attack in attacks %}
+          {{ c.render_attack(attack) }}
+        {% endfor %}
+
       </div>
       <div class="col">
         <div class="row features">

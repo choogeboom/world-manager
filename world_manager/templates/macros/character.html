@@ -1,31 +1,31 @@
 {# Render an ability #}
 {%- macro render_ability(ability_name, ability, proficiency_bonus) %}
 <div id="{{ ability_name }}-ability" class="row">
-  <div class="col-6 col-sm-6 col-md-5 col-lg-4 col-xl-3 ability">
+  <div class="col-4 ability">
     <p class="ability-modifier">{{ '%+d'|format(ability_modifier(ability)) }}</p>
     <p class="ability-score">{{ ability_score(ability) }}</p>
     <p class="ability-name">{{ ability_name | upper }}</p>
   </div>
   <div class="col skills-and-saves">
     <ul>
-      {% if ability['saving_throws']['proficient'] == 1 %}
+      {% if ability.saving_throws.proficient == 1 %}
         {% set cls='proficient saving-throw' %}
-      {% elif ability['saving_throws']['proficient'] == 2 %}
+      {% elif ability.saving_throws.proficient == 2 %}
         {% set cls='expert saving-throw' %}
       {% else %}
         {% set cls='saving-throw' %}
       {% endif %}
       <li class="{{ cls }}">
         <span class="modifier"
-              title="{{ format_other_bonuses(ability['saving_throws']['other']) }}">
+              title="{{ format_other_bonuses(ability.saving_throws.other) }}">
           {{ '%+d'|format(saving_throw_modifier(ability, proficiency_bonus)) }}
         </span>
         <span class="label">SAVING THROWS</span>
       </li>
-      {% for skill_name in ability['skills'] %}
-        {% if ability['skills'][skill_name]['proficient'] == 1 %}
+      {% for skill_name in ability.skills %}
+        {% if ability.skills[skill_name].proficient == 1 %}
           {% set cls='proficient skill' %}
-        {% elif ability['skills'][skill_name]['proficient'] == 2 %}
+        {% elif ability.skills[skill_name].proficient == 2 %}
           {% set cls='expert skill' %}
         {% else %}
           {% set cls='skill' %}
@@ -37,6 +37,51 @@
       </li>
       {% endfor %}
     </ul>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro render_attack(attack) %}
+<div class="attack row">
+  <div class="col">
+    <p>
+      <span class="attack-name">
+        <span class="label">NAME</span>
+        <span class="value">{{ attack.name}}</span>
+      </span>
+      <span>
+        <span class="label">RANGE</span>
+        <span class="value">{{ attack.range}}</span>
+      </span>
+    </p>
+    <p>
+      <span class="attack-bonus"
+        title="{{ format_other_bonuses(attack.attack_bonus) }}">
+        <span class="label">ATTACK BONUS</span>
+        <span class="value">{{ '%+d'|format(sum_other_bonuses(attack.attack_bonus)) }}</span>
+      </span>
+      <span class="attack-damage">
+        <span class="label">DAMAGE</span>
+        <span class="value">
+          {{ attack.damage_dice }}{{ '%+d'|format(sum_other_bonuses(attack.damage_bonus)) }}
+        </span>
+      </span>
+    </p>
+    {% if 'properties' in attack and attack.properties %}
+      <p>
+        <span class="properties">
+          <span class="label">PROPERTIES</span>
+          <span class="value">{{ attack.properties }}</span>
+        </span>
+      </p>
+    {% endif %}
+    {% if 'description' in attack and attack.description %}
+      <p>
+        <span class="description">
+          <span class="value">{{ attack.description }}</span>
+        </span>
+      </p>
+    {% endif %}
   </div>
 </div>
 {% endmacro %}

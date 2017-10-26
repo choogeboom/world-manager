@@ -10,9 +10,8 @@ def current_year() -> int:
 
 
 def ability_score(ability: dict):
-    other_bonuses = (v for d, v in ability['score']['other'])
     return ability['score']['base'] + ability['score']['racial'] \
-        + sum(other_bonuses)
+           + sum_other_bonuses(ability['score']['other'])
 
 
 def ability_modifier(ability: dict):
@@ -22,14 +21,14 @@ def ability_modifier(ability: dict):
 
 def saving_throw_modifier(ability: dict, proficiency_bonus: int):
     proficiency = ability['saving_throws']['proficient']*proficiency_bonus
-    other_bonuses = (v for d, v in ability['saving_throws']['other'])
-    return ability_modifier(ability) + proficiency + sum(other_bonuses)
+    return ability_modifier(ability) + proficiency \
+           + sum_other_bonuses(ability['saving_throws']['other'])
 
 
 def skill_modifier(ability: dict, skill, proficiency_bonus):
     proficiency = ability['skills'][skill]['proficient']*proficiency_bonus
-    other_bonuses = (v for d, v in ability['skills'][skill]['other'])
-    return ability_modifier(ability) + proficiency + sum(other_bonuses)
+    return ability_modifier(ability) + proficiency \
+           + sum_other_bonuses(ability['skills'][skill]['other'])
 
 
 def format_other_bonuses(other):
@@ -39,3 +38,7 @@ def format_other_bonuses(other):
 def armor_score(armor):
     other_bonuses = (v for d, v in armor['other'])
     return armor['base'] + sum(other_bonuses)
+
+
+def sum_other_bonuses(other):
+    return sum(v for _, v in other)
