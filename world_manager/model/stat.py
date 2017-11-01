@@ -47,6 +47,26 @@ class DieType(enum.Enum):
     d100 = 100
 
 
+class CoinType(enum.Enum):
+    cp = 1
+    sp = 10
+    ep = 50
+    gp = 100
+    pp = 1000
+
+
+class Alignment(enum.Enum):
+    Neutral = 1
+    ChaoticNeutral = 2
+    ChaoticGood = 3
+    NeutralGood = 4
+    LawfulGood = 5
+    LawfulNeutral = 6
+    LawfulEvil = 7
+    NeutralEvil = 8
+    ChaoticEvil = 9
+
+
 class DamageType(ResourceMixin, db.Model):
     id = db.Column(db.Integer,
                    primary_key=True)
@@ -138,19 +158,6 @@ class CreatureClass(db.Model):
     name = db.Column(db.String(32), unique=True, index=True, nullable=False)
 
 
-class StatBlockClass(ResourceMixin, db.Model):
-    __table_args__ = (
-        db.UniqueConstraint('stat_block_id', 'creature_class_id'),
-    )
-
-    id = db.Column(db.Integer, primary_key=True)
-    stat_block_id = db.Column(db.Integer, db.ForeignKey('stat_block.id'))
-    creature_class_id = db.Column(db.Integer, db.ForeignKey('creature_class.id'))
-    level = db.Column(db.Integer, nullable=False, index=True)
-    hit_die = db.Column(db.Enum(DieType))
-    creature_class = db.relationship('CreatureClass')
-
-
 background_passive_ability_map = db.Table(
     'background_passive_ability_map',
     db.Column('passive_ability_id', db.Integer,
@@ -184,16 +191,61 @@ class CreatureType(ResourceMixin, db.Model):
     description = db.Column(db.String)
 
 
-class Alignment(enum.Enum):
-    Neutral = 1
-    ChaoticNeutral = 2
-    ChaoticGood = 3
-    NeutralGood = 4
-    LawfulGood = 5
-    LawfulNeutral = 6
-    LawfulEvil = 7
-    NeutralEvil = 8
-    ChaoticEvil = 9
+class StatBlockClass(ResourceMixin, db.Model):
+    __table_args__ = (
+        db.UniqueConstraint('stat_block_id', 'creature_class_id'),
+    )
+
+    id = db.Column(db.Integer, primary_key=True)
+    stat_block_id = db.Column(db.Integer, db.ForeignKey('stat_block.id'))
+    creature_class_id = db.Column(db.Integer, db.ForeignKey('creature_class.id'))
+    level = db.Column(db.Integer, nullable=False, index=True)
+    hit_die = db.Column(db.Enum(DieType))
+    creature_class = db.relationship('CreatureClass')
+
+
+class Ability(ResourceMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32),
+                     nullable=False,
+                     unique=True)
+    abbreviation = db.Column(db.String(8))
+
+
+class AbilityScore(ResourceMixin, db.Model):
+    __table_args__ = (
+        db.UniqueConstraint('ability_id', 'stat_block_id')
+    )
+    id = db.Column(db.Integer, primary_key=True)
+    ability_id = db.Column(db.Integer,
+                           db.ForeignKey('ability.id'),
+                           nullable=False)
+    ability = db.relationship('Ability')
+    stat_block_id = db.Column(db.Integer,
+                              db.ForeignKey('stat_block.id'),
+                              nullable=False)
+    stat_block = db.relationship('StatBlock', back_populates='abilities')
+    base_value = db.Column(db.Integer, server_default=10)
+
+
+class SavingThrow(ResourceMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ability_score_id = db.Column(db.Integer,
+                                 db.ForeignKey('ability_score.id'),
+                                 unique=True)
+    ability_score = db.relationship('AbilityScore')
+    proficiency_multiplier = db.Column(db.Integer, server_default=0,
+                                       nullable=False)
+
+
+class Skill(ResourceMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32),
+                     nullable=False,
+                     unique=True)
+    default_ability_id = db.Column(db.Integer,
+                                   db.ForeignKey('ability.id'),
+                                   nullable=False)
 
 
 class StatBlock(ResourceMixin, db.Model):
@@ -212,12 +264,8 @@ class StatBlock(ResourceMixin, db.Model):
     experience_points = db.Column(db.Integer, index=True, default=0)
 
     proficiency_bonus = db.Column(db.Integer)
-    strength = db.Column(db.Integer)
-    dexterity = db.Column(db.Integer)
-    constitution = db.Column(db.Integer)
-    intelligence = db.Column(db.Integer)
-    wisdom = db.Column(db.Integer)
-    charisma = db.Column(db.Integer)
+
+    abilities = db.relationship('AbilityScore', back_populates='stat_block')
 
     base_hit_point_max = db.Column(db.Integer)
 
