@@ -7,7 +7,7 @@ body {
     border-radius: 10px;
     margin: 1rem;
     padding: 1px;
-    width: 720px;
+    /**width: 720px; */
 }
 
 header h1, header h2, header h3, header h4, header h5, header h6 {
@@ -18,7 +18,7 @@ header h1, header h2, header h3, header h4, header h5, header h6 {
     margin-top: 0;
     font-size: 60%;
     font-weight: 400;
-    color: #868e96 !important;
+    /* color: #868e96 !important; */
 }
 
 .col {
@@ -53,12 +53,13 @@ header h1, header h2, header h3, header h4, header h5, header h6 {
 }
 
 .out-of {
-    color: #868e96;
+    /* color: #868e96; */
 }
 
 .skills-and-saves ul {
     list-style: none;
     margin-bottom: 2px;
+    padding-left: 43px;
 }
 
 .skills-and-saves ul li::before {
@@ -98,7 +99,7 @@ header h1, header h2, header h3, header h4, header h5, header h6 {
 div.ability {
     text-align: center;
     border-style: solid;
-    margin-bottom: 10px;
+    margin-bottom: 4px;
     border-radius: 10px;
     background-color: white;
 }
@@ -158,13 +159,14 @@ div.standalone-stat p {
     border-style: solid;
     border-radius: 10px;
     background-color: white;
+    margin-right: 3px;
 }
 
 .armor-score, .speed-score {
-    padding: 15px;
+    padding: 5px;
     font-size: 175%;
     text-align: center;
-    margin-bottom: 3px;
+    margin: 0;
 }
 
 .armor-label .label,
@@ -179,6 +181,7 @@ div.standalone-stat p {
     border-style: solid;
     border-radius: 10px;
     background-color: white;
+    margin-left: 3px;
 }
 
 .hit-points {
@@ -274,4 +277,5 @@ div.standalone-stat p {
 
 .features ul {
     padding-left: 15px;
+    padding-right: 3px;
 }
