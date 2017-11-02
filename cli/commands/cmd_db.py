@@ -50,9 +50,62 @@ def seed():
     """
     schools_of_magic = ('Abjuration', 'Divination', 'Enchantment', 'Evocation',
                         'Illusion', 'Necromancy', 'Transmutation')
+    damage_types = ('Acid', 'Bludgeoning', 'Cold', 'Fire', 'Force', 'Lightning',
+                    'Necrotic', 'Piercing', 'Poison', 'Psychic', 'Radiant',
+                    'Slashing', 'Thunder')
+    coin_types = (
+        ('Copper', 'cp', 1),
+        ('Silver', 'sp', 10),
+        ('Electrum', 'ep', 50),
+        ('Gold', 'gp', 100),
+        ('Platinum', 'pp', 1000)
+    )
+    abilities = (
+        ('Strength', 'STR'),
+        ('Dexterity', 'DEX'),
+        ('Constitution', 'CON'),
+        ('Intelligence', 'INT'),
+        ('Wisdom', 'WIS'),
+        ('Charisma', 'CHA')
+    )
+    skills = (
+        ('Athletics', 'STR'),
+        ('Acrobatics', 'DEX'),
+        ('Sleight of Hand', 'DEX'),
+        ('Stealth', 'DEX'),
+        ('Arcana', 'INT'),
+        ('History', 'INT'),
+        ('Investigation', 'INT'),
+        ('Nature', 'INT'),
+        ('Religion', 'INT'),
+        ('Animal Handling', 'WIS'),
+        ('Insight', 'WIS'),
+        ('Medicine', 'WIS'),
+        ('Perception', 'WIS'),
+        ('Survival', 'WIS'),
+        ('Deception', 'CHA'),
+        ('Intimidation', 'CHA'),
+        ('Performance', 'CHA'),
+        ('Persuasion', 'CHA')
+    )
     with ScopedSession() as session:
         for school_name in schools_of_magic:
             session.add(stat.SchoolOfMagic(name=school_name))
+        session.commit()
+        for damage_type_name in damage_types:
+            session.add(stat.DamageType(name=damage_type_name))
+        session.commit()
+        for name, abbreviation, value in coin_types:
+            session.add(stat.CoinType(name=name, abbreviation=abbreviation,
+                                      value=value))
+        session.commit()
+        for name, abbreviation in abilities:
+            session.add(stat.Ability(name=name, abbreviation=abbreviation))
+        session.commit()
+        for name, default_ability in skills:
+            ability = session.query(stat.Ability).filter_by(
+                abbreviation=default_ability).one()
+            session.add(stat.Skill(name=name, default_ability_id=ability.id))
 
 
 @cli.command()
