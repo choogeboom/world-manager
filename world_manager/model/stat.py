@@ -47,14 +47,6 @@ class DieType(enum.Enum):
     d100 = 100
 
 
-class CoinType(enum.Enum):
-    cp = 1
-    sp = 10
-    ep = 50
-    gp = 100
-    pp = 1000
-
-
 class Alignment(enum.Enum):
     Neutral = 1
     ChaoticNeutral = 2
@@ -74,6 +66,22 @@ class DamageType(ResourceMixin, db.Model):
                      nullable=False,
                      unique=True,
                      index=True)
+
+
+class CoinType(ResourceMixin, db.Model):
+    id = db.Column(db.Integer,
+                   primary_key=True)
+    name = db.Column(db.String(32),
+                     nullable=False,
+                     unique=True,
+                     index=True)
+    abbreviation = db.Column(db.String(8),
+                             nullable=False,
+                             unique=True,
+                             index=True)
+    value = db.Column(db.Integer,
+                      nullable=False,
+                      index=True)
 
 
 class ActiveAbility(ResourceMixin, db.Model):
@@ -214,7 +222,7 @@ class Ability(ResourceMixin, db.Model):
 
 class AbilityScore(ResourceMixin, db.Model):
     __table_args__ = (
-        db.UniqueConstraint('ability_id', 'stat_block_id')
+        db.UniqueConstraint('ability_id', 'stat_block_id'),
     )
     id = db.Column(db.Integer, primary_key=True)
     ability_id = db.Column(db.Integer,
@@ -225,7 +233,7 @@ class AbilityScore(ResourceMixin, db.Model):
                               db.ForeignKey('stat_block.id'),
                               nullable=False)
     stat_block = db.relationship('StatBlock', back_populates='abilities')
-    base_value = db.Column(db.Integer, server_default=10)
+    base_value = db.Column(db.Integer, default=10)
 
 
 class SavingThrow(ResourceMixin, db.Model):
@@ -234,7 +242,7 @@ class SavingThrow(ResourceMixin, db.Model):
                                  db.ForeignKey('ability_score.id'),
                                  unique=True)
     ability_score = db.relationship('AbilityScore')
-    proficiency_multiplier = db.Column(db.Integer, server_default=0,
+    proficiency_multiplier = db.Column(db.Integer, default=0,
                                        nullable=False)
 
 
