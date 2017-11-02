@@ -210,14 +210,19 @@ class StatBlockClass(ResourceMixin, db.Model):
     level = db.Column(db.Integer, nullable=False, index=True)
     hit_die = db.Column(db.Enum(DieType))
     creature_class = db.relationship('CreatureClass')
+    stat_block = db.relationship('StatBlock', back_populates='classes')
 
 
 class Ability(ResourceMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32),
                      nullable=False,
-                     unique=True)
-    abbreviation = db.Column(db.String(8))
+                     unique=True,
+                     index=True)
+    abbreviation = db.Column(db.String(8),
+                             nullable=False,
+                             unique=True,
+                             index=True)
 
 
 class AbilityScore(ResourceMixin, db.Model):
@@ -236,7 +241,7 @@ class AbilityScore(ResourceMixin, db.Model):
     base_value = db.Column(db.Integer, default=10)
 
 
-class SavingThrow(ResourceMixin, db.Model):
+class SavingThrowProficiency(ResourceMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ability_score_id = db.Column(db.Integer,
                                  db.ForeignKey('ability_score.id'),
@@ -256,8 +261,15 @@ class Skill(ResourceMixin, db.Model):
                                    nullable=False)
 
 
-class StatBlock(ResourceMixin, db.Model):
+class SkillProficiency(ResourceMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    skill_id = db.Column(db.Integer, db.ForeignKey('skill.id'))
+    skill = db.relationship('Skill')
+    stat_block_id = db.Column(db.Integer, db.ForeignKey('stat_block.id'))
+    proficiency_multiplier = db.Column(db.Integer, default=0, nullable=False)
 
+
+class StatBlock(ResourceMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(256), nullable=False, index=True)
     agency_type = db.Column(db.Enum('PC', 'NPC', native_enum=False))
