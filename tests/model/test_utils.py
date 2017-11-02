@@ -12,3 +12,6 @@ def test_resource(db):
 
     with ScopedSession() as session:
         school = session.query(SchoolOfMagic).filter_by(name=school_name).one()
+        assert school.name == school_name
+        assert school.db_updated_on
+        assert school.db_created_on
