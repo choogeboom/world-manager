@@ -1,4 +1,5 @@
 import datetime
+from typing import Optional
 
 import pytz
 from sqlalchemy.types import TypeDecorator, DateTime
@@ -30,16 +31,6 @@ class AwareDateTime(TypeDecorator):
                 raise ValueError('{!r} must be TZ-aware!'.format(value))
         return value
 
-    def process_result_value(self, value, dialect):
-        raise NotImplementedError()
-
-    def process_literal_param(self, value, dialect):
-        raise NotImplementedError()
-
-    @property
-    def python_type(self):
-        raise NotImplementedError()
-
     def __repr__(self):
         return 'AwareDateTime()'
 
@@ -58,9 +49,12 @@ class ResourceMixin:
     )
 
     def __setattr__(self, key, value):
-        if getattr(self, key) != value:
+        if hasattr(self, key):
+            if getattr(self, key) != value:
+                super().__setattr__(key, value)
+                super().__setattr__('db_updated_on', tz_aware_now())
+        else:
             super().__setattr__(key, value)
-            super().__setattr__('db_updated_on', tz_aware_now())
 
     def save(self):
         """
@@ -99,3 +93,42 @@ class ResourceMixin:
         return '<{!s} {!s}({!s})>'.format(obj_id,
                                           self.__class__.__name__,
                                           values)
+
+
+def execute_script(path, engine):
+    with open(path, 'r') as f:
+        for command in split_commands(f):
+            engine.execute(command)
+
+
+def split_commands(lines):
+    no_comments = ''.join(strip_comments(lines))
+    return no_comments.split(';')
+
+
+def strip_comments(lines):
+    return filter(lambda x: not x.startswith('--') and x.strip('\n'),
+                  lines)
+
+
+class ScopedSession:
+
+    def __init__(self, *args, **kwargs):
+        self.args = args
+        self.kwargs = kwargs
+        self.session: Optional[db.Session] = None
+
+    def __enter__(self) -> db.Session:
+        self.session = db.create_scoped_session(*self.args,
+                                                **self.kwargs)
+        return self.session
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if self.session:
+            if exc_type is None:
+                self.session.commit()
+            else:
+                self.session.rollback()
+
+            self.session.close()
+
