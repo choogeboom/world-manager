@@ -2,11 +2,14 @@ import click
 
 from sqlalchemy_utils import database_exists, create_database
 
+from utils.sql import ScopedSession
 from world_manager.app import create_app
 from world_manager.extensions import db
 
 
 # Create an app context for the database connection.
+from world_manager.model import stat
+
 app = create_app()
 db.app = app
 
@@ -39,37 +42,31 @@ def init(with_test_db):
     return None
 
 
-@click.command()
+# noinspection PyArgumentList
+@cli.command()
 def seed():
     """
     Seed the database with an initial user.
-
-    :return: User instance
     """
-    if User.find_by_identity(app.config['SEED_ADMIN_EMAIL']) is not None:
-        return None
-
-    params = {
-        'role': 'admin',
-        'email': app.config['SEED_ADMIN_EMAIL'],
-        'password': app.config['SEED_ADMIN_PASSWORD']
-    }
-
-    return User(**params).save()
+    schools_of_magic = ('Abjuration', 'Divination', 'Enchantment', 'Evocation',
+                        'Illusion', 'Necromancy', 'Transmutation')
+    with ScopedSession() as session:
+        for school_name in schools_of_magic:
+            session.add(stat.SchoolOfMagic(name=school_name))
 
 
-@click.command()
-@click.option('--with-testdb/--no-with-testdb', default=False,
+@cli.command()
+@click.option('--with-test-db/--no-with-test-db', default=False,
               help='Create a test db too?')
 @click.pass_context
-def reset(ctx, with_testdb):
+def reset(ctx, with_test_db):
     """
     Init and seed automatically.
 
-    :param with_testdb: Create a test database
+    :param with_test_db: Create a test database
     :return: None
     """
-    ctx.invoke(init, with_testdb=with_testdb)
+    ctx.invoke(init, with_test_db=with_test_db)
     ctx.invoke(seed)
 
     return None
