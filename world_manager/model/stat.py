@@ -70,20 +70,52 @@ class DamageType(ResourceMixin, db.Model):
                      index=True)
 
 
-class CoinType(ResourceMixin, db.Model):
+class Item(ResourceMixin, db.Model):
     id = db.Column(db.Integer,
                    primary_key=True)
-    name = db.Column(db.String(32),
+    name = db.Column(db.String(128),
                      nullable=False,
                      unique=True,
                      index=True)
+    description = db.Column(db.String)
+    weight = db.Column(db.Float(),
+                       default=0)
+    value = db.Column(db.Integer,
+                      index=True)
+
+
+class CoinType(ResourceMixin, db.Model):
+    id = db.Column(db.Integer,
+                   db.ForeignKey('item.id'),
+                   primary_key=True)
+    item = db.relationship('Item')
     abbreviation = db.Column(db.String(8),
                              nullable=False,
                              unique=True,
                              index=True)
-    value = db.Column(db.Integer,
-                      nullable=False,
-                      index=True)
+
+
+class ArmorCategories(enum.Enum):
+    Unarmored = 1
+    LightArmor = 2
+    MediumArmor = 3
+    HeavyArmor = 4
+
+
+class Armor(ResourceMixin, db.Model):
+    id = db.Column(db.Integer, db.ForeignKey('item.id'), primary_key=True)
+    item = db.Relationship('Item')
+    category = db.Column(db.Enum(ArmorCategories, native_enum=False),
+                         nullable=False)
+    base_armor_class = db.Column(db.Integer, nullable=False, index=True)
+    strength_requirement = db.Column(db.Integer, nullable=False, index=True,
+                                     default=0)
+    stealth_effect = db.Column(db.String, index=True)
+
+
+class Shield(ResourceMixin, db.Model):
+    id = db.Column(db.Integer, db.ForeignKey('item.id'), primary_key=True)
+    item = db.relationship('Item')
 
 
 class ActiveAbility(ResourceMixin, db.Model):
@@ -218,6 +250,9 @@ class StatBlockClass(ResourceMixin, db.Model):
     hit_die = db.Column(db.Enum(DieType))
     creature_class = db.relationship('CreatureClass')
     stat_block = db.relationship('StatBlock', back_populates='classes')
+    current_hit_dice = db.Column(db.Integer,
+                                 nullable=False,
+                                 default=0)
 
 
 class Ability(ResourceMixin, db.Model):
@@ -244,7 +279,7 @@ class AbilityScore(ResourceMixin, db.Model):
     stat_block_id = db.Column(db.Integer,
                               db.ForeignKey('stat_block.id'),
                               nullable=False)
-    stat_block = db.relationship('StatBlock', back_populates='abilities')
+    stat_block = db.relationship('StatBlock', back_populates='ability_scores')
     base_value = db.Column(db.Integer, default=10)
 
 
@@ -276,6 +311,28 @@ class SkillProficiency(ResourceMixin, db.Model):
     proficiency_multiplier = db.Column(db.Integer, default=0, nullable=False)
 
 
+class SpeedType(ResourceMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(16),
+                     unique=True,
+                     nullable=False,
+                     index=True)
+
+
+class SpeedScore(ResourceMixin, db.Model):
+    __table_args__ = (
+        db.UniqueConstraint('speed_type_id', 'stat_block_id'),
+    )
+    id = db.Column(db.Integer, primary_key=True)
+    speed_type_id = db.Column(db.Integer, db.ForeignKey('speed_type.id'),
+                              nullable=False)
+    speed_type = db.relationship('SpeedType')
+    stat_block_id = db.Column(db.Integer, db.ForeignKey('stat_block.id'),
+                              nullable=False)
+    stat_block = db.relationship('StatBlock', back_populates='speed_scores')
+    base_value = db.Column(db.Integer, default=0, nullable=False, index=True)
+
+
 class StatBlock(ResourceMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(256), nullable=False, index=True)
@@ -296,13 +353,39 @@ class StatBlock(ResourceMixin, db.Model):
                                      back_populates='stat_block')
 
     base_hit_point_max = db.Column(db.Integer)
+    current_hit_points = db.Column(db.Integer)
+    temporary_hit_points = db.Column(db.Integer)
 
-    walking_speed = db.Column(db.Integer)
-    swimming_speed = db.Column(db.Integer)
-    climbing_speed = db.Column(db.Integer)
-    flying_speed = db.Column(db.Integer)
+    speed_scores = db.relationship('SpeedScore', back_populates='stat_block')
+
+    base_armor_class = db.Column(db.Integer,
+                                 nullable=False,
+                                 default=10,
+                                 index=True)
 
     personality_traits = db.Column(db.String)
     ideals = db.Column(db.String)
     bonds = db.Column(db.String)
     flaws = db.Column(db.String)
+
+
+stat_block_condition_map = db.Table(
+    'stat_block_condition_map',
+    db.Column('condition_id',
+              db.Integer,
+              db.ForeignKey('condition.id')),
+    db.Column('stat_block_id',
+              db.Integer,
+              db.ForeignKey('stat_block.id')),
+    db.PrimaryKeyConstraint('condition_id', 'stat_block_id')
+)
+
+
+class Condition(ResourceMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32),
+                     nullable=False,
+                     unique=True,
+                     index=True)
+    description = db.Column(db.String)
+
