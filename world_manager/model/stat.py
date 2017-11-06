@@ -2,6 +2,7 @@ import enum
 
 from utils.sql import ResourceMixin
 from world_manager.extensions import db
+from world_manager.model import account
 
 
 class SchoolOfMagic(ResourceMixin, db.Model):
@@ -27,15 +28,6 @@ damage_type_spell_map = db.Table(
     db.Column('damage_type_id', db.Integer, db.ForeignKey('damage_type.id')),
     db.Column('spell_id', db.Integer, db.ForeignKey('spell.id')),
     db.PrimaryKeyConstraint('damage_type_id', 'spell_id')
-)
-
-
-damage_type_active_ability_map = db.Table(
-    'damage_type_active_ability_map',
-    db.Column('damage_type_id', db.Integer, db.ForeignKey('damage_type.id')),
-    db.Column('active_ability_id', db.Integer,
-              db.ForeignKey('active_ability.id')),
-    db.PrimaryKeyConstraint('damage_type_id', 'active_ability_id')
 )
 
 
@@ -104,7 +96,7 @@ class ArmorCategories(enum.Enum):
 
 class Armor(ResourceMixin, db.Model):
     id = db.Column(db.Integer, db.ForeignKey('item.id'), primary_key=True)
-    item = db.Relationship('Item')
+    item = db.relationship('Item')
     category = db.Column(db.Enum(ArmorCategories, native_enum=False),
                          nullable=False)
     base_armor_class = db.Column(db.Integer, nullable=False, index=True)
@@ -118,30 +110,65 @@ class Shield(ResourceMixin, db.Model):
     item = db.relationship('Item')
 
 
-class ActiveAbility(ResourceMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    unique_name = db.Column(db.String(256), unique=True, index=True,
-                            nullable=False)
-    name = db.Column(db.String(256))
-    description = db.Column(db.String(8196))
-    number_of_uses = db.Column(db.Integer)
-    replenishes_on_short_rest = db.Column(db.Boolean)
-    replenishes_on_long_rest = db.Column(db.Boolean)
-    action_type = db.Column(
-        db.Enum('Action', 'Bonus Action', 'Reaction', 'Free', 'Other'))
-    damage_types = db.relationship('DamageType',
-                                   secondary='damage_type_active_ability_map',
-                                   backref=db.backref('active_abilities',
-                                                      lazy='dynamic'))
+class WeaponCategory(enum.Enum):
+    Simple = 1
+    Martial = 2
 
 
-class PassiveAbility(ResourceMixin, db.Model):
+class WeaponClass(enum.Enum):
+    Melee = 1
+    Ranged = 2
+
+
+weapon_weapon_property_map = db.Table(
+    'weapon_weapon_property_map',
+    db.Column('weapon_id', db.ForeignKey('weapon.id')),
+    db.Column('weapon_property_id', db.ForeignKey('weapon_property.id')),
+    db.PrimaryKeyConstraint('weapon_id', 'weapon_property_id'))
+
+
+class Weapon(ResourceMixin, db.Model):
+    id = db.Column(db.Integer, db.ForeignKey('item.id'), primary_key=True)
+    item = db.relationship('Item')
+    category = db.Column(db.Enum(WeaponCategory, native_enum=False),
+                         nullable=False)
+    classification = db.Column(db.Enum(WeaponClass, native_enum=False))
+    properties = db.relationship('WeaponProperty',
+                                 secondary=weapon_weapon_property_map)
+
+
+class WeaponProperty(ResourceMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    unique_name = db.Column(db.String(256),
-                            unique=True,
-                            index=True,
-                            nullable=False)
-    description = db.Column(db.String(8196))
+    name = db.Column(db.String(16),
+                     nullable=False,
+                     unique=True,
+                     index=True)
+    description = db.Column(db.String())
+
+
+class ActionType(enum.Enum):
+    Action = 1
+    BonusAction = 2
+    Reaction = 3
+    LegendaryAction = 4
+    LairAction = 5
+
+
+class Attack(ResourceMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64),
+                     nullable=False,
+                     unique=True,
+                     index=True)
+    display_name = db.Column(db.String(64),
+                             nullable=False)
+    required_number_of_hands = db.Column(db.Integer, nullable=False)
+    ability_id = db.Column(db.Integer, db.ForeignKey('ability.id'))
+    ability = db.relationship('Ability')
+    melee_range = db.Column(db.Integer)
+    short_range = db.Column(db.Integer)
+    long_range = db.Column(db.Integer)
+    uses_proficiency = db.Column(db.Boolean(), default=True)
 
 
 class Spell(ResourceMixin, db.Model):
@@ -204,23 +231,10 @@ class CreatureClass(db.Model):
     name = db.Column(db.String(32), unique=True, index=True, nullable=False)
 
 
-background_passive_ability_map = db.Table(
-    'background_passive_ability_map',
-    db.Column('passive_ability_id', db.Integer,
-              db.ForeignKey('passive_ability.id')),
-    db.Column('background_id', db.Integer,
-              db.ForeignKey('background.id')),
-    db.PrimaryKeyConstraint('passive_ability_id', 'background_id')
-)
-
-
 class Background(ResourceMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False, index=True)
     description = db.Column(db.String)
-    passive_abilities = db.relationship(
-        'PassiveAbility',
-        secondary=background_passive_ability_map)
 
 
 class Race(ResourceMixin, db.Model):
@@ -336,7 +350,9 @@ class SpeedScore(ResourceMixin, db.Model):
 class StatBlock(ResourceMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(256), nullable=False, index=True)
-    agency_type = db.Column(db.Enum('PC', 'NPC', native_enum=False))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'),
+                        nullable=True)
+    user = db.relationship(account.User)
     classes = db.relationship('StatBlockClass')
     background_id = db.Column(db.Integer, db.ForeignKey('background.id'),
                               nullable=True, index=True)
@@ -357,11 +373,6 @@ class StatBlock(ResourceMixin, db.Model):
     temporary_hit_points = db.Column(db.Integer)
 
     speed_scores = db.relationship('SpeedScore', back_populates='stat_block')
-
-    base_armor_class = db.Column(db.Integer,
-                                 nullable=False,
-                                 default=10,
-                                 index=True)
 
     personality_traits = db.Column(db.String)
     ideals = db.Column(db.String)
@@ -389,3 +400,38 @@ class Condition(ResourceMixin, db.Model):
                      index=True)
     description = db.Column(db.String)
 
+
+class FeatureCategory(enum.Enum):
+    RacialTrait = 1
+    ClassFeature = 2
+    Feat = 3
+    BackgroundFeature = 4
+    ItemFeature = 5
+
+
+class Rest(enum.Enum):
+    ShortRest = 1
+    LongRest = 2
+
+
+class Feature(ResourceMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128),
+                     nullable=False,
+                     unique=True,
+                     index=True)
+    description = db.Column(db.String(),
+                            nullable=False,
+                            )
+    category = db.Column(db.Enum(FeatureCategory, native_enum=False),
+                         nullable=False,
+                         index=True)
+    maximum_uses = db.Column(db.Integer)
+    current_uses = db.Column(db.Integer)
+    replenishes_on = db.Column(db.Enum(Rest, native_enum=False))
+
+
+class Language(ResourceMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32), nullable=False, unique=True, index=True)
+    script = db.Column(db.String(32))
